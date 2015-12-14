@@ -1,0 +1,66 @@
+{
+	"manifestversion": 1,
+	"id": "jfrog-artifactory",
+	"version": "0.1.0",
+	"name": "JFrog Artifactory",
+	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
+	"publisher": "jfrog",
+	// "baseUri":"https://localhost:3000/",
+	"targets": [
+		{
+			"id": "Microsoft.VisualStudio.Services"
+		}
+	],
+	"icons": {
+		"default": "images/jfrog.png"	
+	},
+	"scopes": ["vso.build"],
+	"contributions": [
+		{
+			"id": "JFrog.Artifactory",
+			"type": "ms.vss-web.hub",
+			"description": "Add a new hub to build group to setup your JFrog Artifactory endpoint.",
+			"targets": [
+				"ms.vss-build-web.build-hub-group"
+			],
+			"properties": {
+				"name": "SetupArtifactory",
+				"order": 99,
+				"uri": "setup-artifactory.html"
+			}
+		},
+		{
+         "id": "promoteToArtifactory",
+         "type": "ms.vss-web.action",
+         "description": "Promote a terminated build to JFrog Artifactory",
+         "targets": [
+             "ms.vss-build-web.completed-build-menu"
+         ],
+         "properties": {
+             "text": "Promote to JFrog Artifactory",
+             "title": "Promote to JFrog Artifactory",
+             "uri": "promote-build.html"
+         	}
+     	}
+	],
+	"files": [
+		{
+			"path": "setup-artifactory.html", "addressable": true
+		},
+		{
+			"path": "promote.html", "addressable": true
+		},
+		{
+			"path": "lib", "addressable": true
+		},
+		{
+			"path": "scripts", "addressable": true
+		},
+		{
+			"path": "css", "addressable": true
+		},
+		{
+			"path": "images/jfrog.png", "addressable": true
+		}
+	]
+}

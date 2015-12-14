@@ -1,0 +1,44 @@
+ <!DOCTYPE html>
+ <html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+     <title>Setup Artifactory</title>
+     <script src="lib/VSS.SDK.js"></script>
+     <link rel="stylesheet" href="css/main.css" />
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ </head>
+ <body>
+     <script type="text/javascript">VSS.init({
+         //We are using some VSTS APIs, so we will need the module loader to load them
+         usePlatformScripts: true,
+         usePlatformStyles: true
+     });
+     
+     VSS.ready(function () {
+            require(["scripts/setup-artifactory"], function (extensionData) { });
+            VSS.notifyLoadSucceeded();
+        });
+     </script>
+     <h1>Configure Artifactory ?</h1>
+       <div id="ess-extension">
+        <div class="Artifactory">
+            <div class="artifactoryEndpoint">
+                <label>Artifactory URI</label>
+                <input class="uri" />
+                <br />
+                <div class="credentials">
+                    <label>User name</label>
+                    <input class="username" />
+                    
+                    <label>API Key</label>
+                    <input class="password" />
+                </div>
+            </div>
+            
+        </div>
+
+        <br />
+        <button class="saveButton">Save Settings</button>
+                
+    </div>
+ </body>
+ </html>
