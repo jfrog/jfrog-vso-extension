@@ -4,8 +4,7 @@
 	"version": "0.1.0",
 	"name": "JFrog Artifactory",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
-	"publisher": "jfrog",
-	// "baseUri":"https://localhost:3000/",
+	"publisher": "jfrog-soleng",
 	"targets": [
 		{
 			"id": "Microsoft.VisualStudio.Services"
@@ -48,7 +47,7 @@
 			"path": "setup-artifactory.html", "addressable": true
 		},
 		{
-			"path": "promote.html", "addressable": true
+			"path": "promote-build.html", "addressable": true
 		},
 		{
 			"path": "lib", "addressable": true
