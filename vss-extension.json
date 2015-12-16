@@ -1,7 +1,7 @@
 {
 	"manifestversion": 1,
 	"id": "jfrog-artifactory",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"name": "JFrog Artifactory",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
 	"publisher": "jfrog-soleng",
@@ -40,7 +40,29 @@
              "title": "Promote to JFrog Artifactory",
              "uri": "promote-build.html"
          	}
-     	}
+     	},
+		 {
+         "id": "setup-build-action",
+         "type": "ms.vss-web.action",
+         "description": "Setup a build definition with JFrog Artifactory",
+         "targets": [
+             "ms.vss-build-web.build-definition-menu"
+         ],
+         "properties": {
+             "text": "Setup JFrog Artifactory",
+             "title": "Setup JFrog Artifactory",
+             "uri": "setup-build-action.html"
+         	}
+     	},
+		{
+			"id": "setup-build-dialog",
+			"type": "ms.vss-web.control",
+			"description": "The content to be displayed on setup Jfrog Artifactory action dialog",
+			"targets": [],
+			"properties": {
+				"uri": "setup-build-dialog.html"
+			}
+		}
 	],
 	"files": [
 		{
@@ -48,6 +70,12 @@
 		},
 		{
 			"path": "promote-build.html", "addressable": true
+		},
+		{
+			"path": "setup-build-action.html", "addressable": true
+		},
+		{
+			"path": "setup-build-dialog.html", "addressable": true
 		},
 		{
 			"path": "lib", "addressable": true

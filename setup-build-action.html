@@ -1,0 +1,49 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <title>Promote sample</title>
+ </head>
+ <body>
+	 <script src="lib/VSS.SDK.js"></script>
+ <script>
+      VSS.init({
+        explicitNotifyLoaded: true, 
+        usePlatformScripts: true
+    });
+    
+    VSS.notifyLoadSucceeded();
+    
+    var menuContributionHandler = (function () {
+         "use strict";
+         return {
+             // This is a callback that gets invoked when a user clicks the newly contributed menu item
+             // The actionContext parameter contains context data surrounding the circumstances of this
+             // action getting invoked.
+             execute: function (actionContext) {
+	VSS.getService(VSS.ServiceIds.Dialog).then(function(dialogService) {
+        var extensionCtx = VSS.getExtensionContext();
+        //build absolute contribution id for dialogContent
+        var contributionId = extensionCtx.publisherId + "." + extensionCtx.extensionId + ".setup-build-dialog";
+        
+        //Show dialog
+        var dialogOptions = {
+          title: "Setup Artifactory for this Build",
+          width: 800,
+          height: 600  
+        };
+        
+        dialogService.openDialog(contributionId, dialogOptions);
+    });
+             }
+         };
+    }());
+     // Associate the menuContributionHandler object with the "myAction" menu contribution from the manifest.
+     VSS.register("setup-build-action", menuContributionHandler);
+ </script>
+     <div>
+         The end user doesn't see the content on this page.
+         It is only in the background to handle the contributed menu item being clicked.
+     </div>
+ </body>
+ </html>
