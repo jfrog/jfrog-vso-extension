@@ -4,6 +4,7 @@
 	"version": "0.1.3",
 	"name": "JFrog Artifactory",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
+  	"baseUri": "https://localhost:3000",
 	"publisher": "jfrog-soleng",
 	"targets": [
 		{
@@ -16,20 +17,20 @@
 	"scopes": ["vso.build"],
 	"contributions": [
 		{
-			"id": "JFrog.Artifactory",
+			"id": "JFrog.Artifactory2",
 			"type": "ms.vss-web.hub",
 			"description": "Add a new hub to build group to setup your JFrog Artifactory endpoint.",
 			"targets": [
 				"ms.vss-build-web.build-hub-group"
 			],
 			"properties": {
-				"name": "SetupArtifactory",
+				"name": "SetupArtifactory2",
 				"order": 99,
 				"uri": "setup-artifactory.html"
 			}
 		},
 		{
-         "id": "promoteToArtifactory",
+         "id": "promoteToArtifactory2",
          "type": "ms.vss-web.action",
          "description": "Promote a terminated build to JFrog Artifactory",
          "targets": [

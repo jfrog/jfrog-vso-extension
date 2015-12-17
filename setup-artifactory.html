@@ -5,8 +5,13 @@
      <script src="lib/VSS.SDK.js"></script>
      <link rel="stylesheet" href="css/main.css" />
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+     <meta http-Equiv="Cache-Control" Content="no-cache" />
+     <meta http-Equiv="Pragma" Content="no-cache" />
+     <meta http-Equiv="Expires" Content="0" />
  </head>
  <body>
+
      <script type="text/javascript">VSS.init({
          //We are using some VSTS APIs, so we will need the module loader to load them
          usePlatformScripts: true,
@@ -40,5 +45,10 @@
         <button class="saveButton">Save Settings</button>
                 
     </div>
+
+
+    <button class="reload" onclick="window.location.reload();">Reload</button>
+
+
  </body>
  </html>
