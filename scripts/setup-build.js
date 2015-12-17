@@ -1,4 +1,4 @@
-define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout"], function (require, exports, ExtensionData, Q, ko) {
+define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient"], function (require, exports, ExtensionData, Q, ko, buildClient) {
 	
 		 var viewModel = new SetupViewModel();
          ko.applyBindings(viewModel);
@@ -6,6 +6,8 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout"]
          getSettings(viewModel);
          
          VSS.notifyLoadSucceeded();
+         
+        
          
          function SetupViewModel(){
             var self = this;
@@ -15,14 +17,61 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout"]
             self.password = ko.observable("loading");
             self.publishRepo = ko.observable("");
             self.promoteRepo = ko.observable("");
-           
+                       
             this.save = function(){
+              var defId = parseInt(location.search.substr("?id=".length));
+              var webcontext = VSS.getWebContext();
+              var apiget = webcontext.collection.uri + webcontext.project.name +"/_apis/build/definitions/" + defId + "?api-version=2.0";
+               
+               console.log(apiget);
+               $.getJSON(apiget, function(data ,status){
+
+                 data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo());
+                 data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo());
+                 data = addVariablesToBuildDefinition(data,"ArifactoryUsername", self.userName());
+                 data = addVariablesToBuildDefinition(data,"ArifactoryApiKey", self.password());
+                 data = addVariablesToBuildDefinition(data,"ArifactoryUri", self.artifactoryUri());
+                 
+                 console.log(data.variables);
+                
+                 var client = buildClient.getClient();
+                 client.updateDefinition(data, defId).then(function(result){
+                     console.log(result);
+                 })
+                  
+                $.ajax({
+                    method: 'PUT',
+                    contentType: 'application/json; charset=utf-8',
+                    url: apiget,
+                    async: false,
+                    data: data,
+                    success: function( response ){
+                        var i = response;
+                        console.log(response);
+                    },
+                    error: function(jqXHR, exception)
+                    {
+                        console.log(exception);
+                        console.log(jqXHR);
+                    }
+                       
+                });     
+                   
+               })
+               
+                
+              
+            //   var client = buildClient.getClient();
+            //   client.getDefinition(defId).then(function(buildDefinition){
+            //       
+            //   })
+              
+              
               console.log(self.overrideCreds());
               console.log(self.artifactoryUri());
               console.log(self.publishRepo());
               console.log(self.promoteRepo());
             };
-            
          }
 	  });
         
@@ -39,6 +88,13 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout"]
                          console.log("hey I loaded creds")
             });
         });
+    }
+    
+    function addVariablesToBuildDefinition(buildDef, variableName, value){
+          var tempMap = {};
+          tempMap["value"] = value;
+          buildDef.variables[variableName] = tempMap;
+          return buildDef;
     }
     
     function saveSettings(scope, selector) {

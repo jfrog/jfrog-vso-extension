@@ -24,13 +24,14 @@
 	VSS.getService(VSS.ServiceIds.Dialog).then(function(dialogService) {
         var extensionCtx = VSS.getExtensionContext();
         //build absolute contribution id for dialogContent
-        var contributionId = extensionCtx.publisherId + "." + extensionCtx.extensionId + ".setup-build-dialog";
+        var contributionId = extensionCtx.publisherId + "." + extensionCtx.extensionId + ".setupBuildDialog";
         
         //Show dialog
         var dialogOptions = {
           title: "Setup Artifactory for this Build",
           width: 800,
-          height: 600  
+          height: 600,
+          urlReplacementObject: { buildDefId: actionContext.id}  
         };
         
         dialogService.openDialog(contributionId, dialogOptions);

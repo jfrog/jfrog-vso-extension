@@ -1,7 +1,7 @@
 {
 	"manifestversion": 1,
 	"id": "jfrog-artifactory",
-	"version": "0.1.1",
+	"version": "0.1.3",
 	"name": "JFrog Artifactory",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
 	"publisher": "jfrog-soleng",
@@ -55,12 +55,12 @@
          	}
      	},
 		{
-			"id": "setup-build-dialog",
+			"id": "setupBuildDialog",
 			"type": "ms.vss-web.control",
 			"description": "The content to be displayed on setup Jfrog Artifactory action dialog",
 			"targets": [],
 			"properties": {
-				"uri": "setup-build-dialog.html"
+				"uri": "setup-build-dialog.html?id={{buildDefId}}"
 			}
 		}
 	],

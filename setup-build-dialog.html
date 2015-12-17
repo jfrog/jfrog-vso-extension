@@ -13,7 +13,7 @@
          usePlatformScripts: true,
          usePlatformStyles: true
      });
-     
+     var extensionCtx = VSS.getExtensionContext();
      VSS.ready(function () {
             require(["scripts/setup-build"], function (extensionData) { });
         });
