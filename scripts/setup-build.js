@@ -35,7 +35,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                  console.log(data.variables);
                 
                  var client = buildClient.getClient();
-                 client.updateDefinition(data, defId).then(function(result){
+                 client.updateDefinition(data, defId, data.project.id).then(function(result){
                      console.log(result);
                  })
                   
