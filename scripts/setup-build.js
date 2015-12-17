@@ -17,13 +17,16 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
             self.password = ko.observable("loading");
             self.publishRepo = ko.observable("");
             self.promoteRepo = ko.observable("");
+            self.buildDefId = parseInt(location.search.substr("?id=".length));
                        
             this.save = function(){
-              var defId = parseInt(location.search.substr("?id=".length));
+                
+              saveSettings(self);  
+              var defId = self.buildDefId;
               var webcontext = VSS.getWebContext();
-              var apiget = webcontext.collection.uri + webcontext.project.name +"/_apis/build/definitions/" + defId + "?api-version=2.0";
+              var apiUrl = webcontext.collection.uri + webcontext.project.name +"/_apis/build/definitions/" + defId + "?api-version=2.0";
                
-               $.getJSON(apiget, function(data ,status){
+               $.getJSON(apiUrl, function(data ,status){
 
                  data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo());
                  data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo());
@@ -54,6 +57,15 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                         viewModel.password(credentials ? credentials.password : "");
                          console.log("hey I loaded creds")
             });
+            extensionSettingsService.getValue("setupBuildArtifactory" + viewModel.buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
+                        if(loadedViewModel){
+                            viewModel.userName(loadedViewModel.username);
+                            viewModel.password(loadedViewModel.password);
+                            viewModel.publishRepo(loadedViewModel.publishRepo)
+                            viewModel.promoteRepo(loadedViewModel.promoteRepo)
+                            console.log("hey I loaded creds")
+                         }
+            });
         });
     }
     
@@ -64,18 +76,21 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
           return buildDef;
     }
     
-    function saveSettings(scope, selector) {
-                // var artifactoryUri = $(selector + " .uri").val();
-        // var credentials = {
-        //     username: $(selector + " .username").val(),
-        //     password: $(selector + " .password").val()
-        // };
-        // VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-        //        extensionSettingsService.setValue("credentials", credentials, {scopeType: scope}).then(function (value) {
-        //     });
-        //     
-        //     
-        //     
-        // });
+    function saveSettings(viewModel) {
+               
+        var saveViewModel = {
+            username: viewModel.userName(),
+            password: viewModel.password(),
+            publishRepo: viewModel.publishRepo(),
+            promoteRepo: viewModel.promoteRepo()
+        };
+        VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
+               extensionSettingsService.setValue("setupBuildArtifactory" + viewModel.buildDefId, saveViewModel, {scopeType: "Default"}).then(function (value) {
+                   console.log(value);
+            });
+            
+            
+            
+        });
     }
         
