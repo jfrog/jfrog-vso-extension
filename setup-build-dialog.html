@@ -22,7 +22,7 @@
        <div id="ess-extension">
         <div class="Artifactory">
             <div class="artifactoryEndpoint">
-                <label>Artifactory URI</label>
+                <label>Artifactory URL</label>
                 <input data-bind="value: artifactoryUri" class="uri" disabled />
                 <br />
                 <label>Override credentials </label>
@@ -46,6 +46,7 @@
         <br />
         <button class="saveButton" data-bind="click: save">Save Settings</button>
                 
+    <button class="reload" onclick="window.location.reload();">Reload</button>
     </div>
  </body>
  </html>
