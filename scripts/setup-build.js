@@ -23,7 +23,6 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
               var webcontext = VSS.getWebContext();
               var apiget = webcontext.collection.uri + webcontext.project.name +"/_apis/build/definitions/" + defId + "?api-version=2.0";
                
-               console.log(apiget);
                $.getJSON(apiget, function(data ,status){
 
                  data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo());
@@ -32,45 +31,13 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                  data = addVariablesToBuildDefinition(data,"ArifactoryApiKey", self.password());
                  data = addVariablesToBuildDefinition(data,"ArifactoryUri", self.artifactoryUri());
                  
-                 console.log(data.variables);
-                
                  var client = buildClient.getClient();
                  client.updateDefinition(data, defId, data.project.id).then(function(result){
                      console.log(result);
                  })
-                  
-                $.ajax({
-                    method: 'PUT',
-                    contentType: 'application/json; charset=utf-8',
-                    url: apiget,
-                    async: false,
-                    data: data,
-                    success: function( response ){
-                        var i = response;
-                        console.log(response);
-                    },
-                    error: function(jqXHR, exception)
-                    {
-                        console.log(exception);
-                        console.log(jqXHR);
-                    }
-                       
-                });     
                    
                })
-               
-                
-              
-            //   var client = buildClient.getClient();
-            //   client.getDefinition(defId).then(function(buildDefinition){
-            //       
-            //   })
-              
-              
-              console.log(self.overrideCreds());
-              console.log(self.artifactoryUri());
-              console.log(self.publishRepo());
-              console.log(self.promoteRepo());
+
             };
          }
 	  });
