@@ -31,7 +31,8 @@
           title: "Setup Artifactory for this Build",
           width: 800,
           height: 600,
-          urlReplacementObject: { buildDefId: actionContext.id}  
+          buttons: null,
+          urlReplacementObject: {buildDefId: actionContext.id}  
         };
         
         dialogService.openDialog(contributionId, dialogOptions);
