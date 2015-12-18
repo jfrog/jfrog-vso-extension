@@ -12,8 +12,37 @@
         usePlatformScripts: true
     });
     
-    VSS.notifyLoadSucceeded();
-	alert("not implemented yet - WIP");
+     VSS.notifyLoadSucceeded();
+    
+    var menuContributionHandler = (function () {
+         "use strict";
+         return {
+             // This is a callback that gets invoked when a user clicks the newly contributed menu item
+             // The actionContext parameter contains context data surrounding the circumstances of this
+             // action getting invoked.
+             execute: function (actionContext) {
+	    VSS.getService(VSS.ServiceIds.Dialog).then(function(dialogService) {
+        var extensionCtx = VSS.getExtensionContext();
+        //build absolute contribution id for dialogContent
+        var contributionId = extensionCtx.publisherId + "." + extensionCtx.extensionId + ".promoteBuildDialog";
+        
+        //Show dialog
+        var dialogOptions = {
+          title: "Promote this build to JFrog Artifactory",
+          width: 400,
+          height: 300,
+          buttons: null,
+          urlReplacementObject: {buildId: actionContext.id}  
+        };
+        
+        dialogService.openDialog(contributionId, dialogOptions);
+    });
+             }
+         };
+    }());
+     // Associate the menuContributionHandler object with the "myAction" menu contribution from the manifest.
+     VSS.register("promote-build-action", menuContributionHandler);
+     
     //   // Use an IIFE to create an object that satisfies the IContributedMenuSource contract
     //   var menuContributionHandler = (function () {
     //      "use strict";
@@ -56,7 +85,7 @@
     //  }());
 
      // Associate the menuContributionHandler object with the "myAction" menu contribution from the manifest.
-     VSS.register("promoteToArtifactory", menuContributionHandler);
+     //VSS.register("promoteToArtifactory", menuContributionHandler);
  </script>
      <div>
          The end user doesn't see the content on this page.

@@ -1,0 +1,37 @@
+ <!DOCTYPE html>
+ <html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+     <title>Setup Artifactory</title>
+     <script type="text/javascript" src="lib/VSS.SDK.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+ </head>
+ <body>
+     <script type="text/javascript">VSS.init({
+         explicitNotifyLoaded: true, 
+         //We are using some VSTS APIs, so we will need the module loader to load them
+         usePlatformScripts: true,
+         usePlatformStyles: true
+     });
+     var extensionCtx = VSS.getExtensionContext();
+     VSS.ready(function () {
+            require(["scripts/promote-build"], function (extensionData) { });
+        });
+     </script>
+		  <label>Target Status</label>
+		  <input data-bind="value: targetStatus"/>
+		  
+		  <label>Comment</label>
+		  <textarea data-bind="value: comment"/>
+		  
+		  <label>Target promotion repository</label>
+		  <input data-bind="value: promoteRepository"/>
+		  
+		  <label>Include dependencies</label>
+		  <input type="checkbox" data-bind="checked: includeDependencies"/>   
+		   
+		  <label>Use copy</label>
+		  <input type="checkbox" data-bind="checked: useCopy"/>   
+
+          <button data-bind="click: promote">Save Settings</button>
+ </body>
+ </html>

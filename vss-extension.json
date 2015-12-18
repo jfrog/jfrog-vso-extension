@@ -29,7 +29,7 @@
 			}
 		},
 		{
-         "id": "promoteToArtifactory",
+         "id": "promote-build-action",
          "type": "ms.vss-web.action",
          "description": "Promote a terminated build to JFrog Artifactory",
          "targets": [
@@ -38,9 +38,18 @@
          "properties": {
              "text": "Promote to JFrog Artifactory",
              "title": "Promote to JFrog Artifactory",
-             "uri": "promote-build.html"
+             "uri": "promote-build-action.html"
          	}
      	},
+		 {
+			"id": "promoteBuildDialog",
+			"type": "ms.vss-web.control",
+			"description": "The content to be displayed on promote to Jfrog Artifactory action dialog",
+			"targets": [],
+			"properties": {
+				"uri": "promote-build-dialog.html?id={{buildId}}"
+			}
+		},
 		 {
          "id": "setup-build-action",
          "type": "ms.vss-web.action",
@@ -69,7 +78,10 @@
 			"path": "setup-artifactory.html", "addressable": true
 		},
 		{
-			"path": "promote-build.html", "addressable": true
+			"path": "promote-build-action.html", "addressable": true
+		},
+		{
+			"path": "promote-build-dialog.html", "addressable": true
 		},
 		{
 			"path": "setup-build-action.html", "addressable": true
