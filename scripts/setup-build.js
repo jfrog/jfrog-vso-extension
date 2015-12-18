@@ -34,9 +34,9 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                  }
                  data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo());
                  data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo());
-                 data = addVariablesToBuildDefinition(data,"ArifactoryUsername", self.userName());
-                 data = addVariablesToBuildDefinition(data,"ArifactoryApiKey", self.password());
-                 data = addVariablesToBuildDefinition(data,"ArifactoryUri", self.artifactoryUri());
+                 data = addVariablesToBuildDefinition(data,"ArtifactoryUsername", self.userName());
+                 data = addVariablesToBuildDefinition(data,"ArtifactoryApiKey", self.password());
+                 data = addVariablesToBuildDefinition(data,"ArtifactoryUri", self.artifactoryUri());
                  
                  var client = buildClient.getClient();
                  client.updateDefinition(data, defId, data.project.id).then(function(result){
