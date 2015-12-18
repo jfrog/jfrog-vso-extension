@@ -4,6 +4,23 @@
      <title>Setup Artifactory</title>
      <script type="text/javascript" src="lib/VSS.SDK.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+     <style type="text/css">
+         .artForm {
+             width: 100%;
+         }
+         .label {
+             width: 25%;
+         }
+         .field {
+             width: 75%;
+         }
+
+         input[type="text"], textarea {
+             border: 1px solid #E6E6E6;
+             padding: 2px;
+             width: 100%;
+         }
+     </style>
  </head>
  <body>
      <script type="text/javascript">VSS.init({
@@ -17,21 +34,57 @@
             require(["scripts/promote-build"], function (extensionData) { });
         });
      </script>
-		  <label>Target Status</label>
-		  <input data-bind="value: targetStatus"/>
-		  
-		  <label>Comment</label>
-		  <textarea data-bind="value: comment"></textarea>
-		  
-		  <label>Target promotion repository</label>
-		  <input data-bind="value: promoteRepository"/>
-		  
-		  <label>Include dependencies</label>
-		  <input type="checkbox" data-bind="checked: includeDependencies"/>   
-		   
-		  <label>Use copy</label>
-		  <input type="checkbox" data-bind="checked: useCopy"/>   
+     <h3>Configure Artifactory </h3>
 
-          <button data-bind="click: promote">Save Settings</button>
+     <form>
+         <table class="artForm">
+             <tr>
+                 <td class="option-label label">
+                     <label for="targetStatus">Target Status</label>
+                 </td>
+                 <td class="field">
+                     <input type="text" id="targetStatus" data-bind="value: targetStatus"/>
+                 </td>
+             </tr>
+             <tr>
+                 <td class="option-label label">
+                     <label for="targetStatus">Comment</label>
+                 </td>
+                 <td class="field">
+                     <textarea data-bind="value: comment"></textarea>
+                 </td>
+             </tr>
+             <tr>
+                 <td class="option-label label">
+                     <label for="promoteRepository">Target promotion repository</label>
+                 </td>
+                 <td class="field">
+                     <input type="text" id="promoteRepository" data-bind="value: promoteRepository" />
+                 </td>
+             </tr>
+             <tr>
+                 <td class="option-label label">
+                     <label for="includeDependencies">Include dependencies</label>
+                 </td>
+                 <td class="field">
+                     <input id="includeDependencies" type="checkbox" data-bind="checked: includeDependencies"/>
+                 </td>
+             </tr>
+             <tr>
+                 <td class="option-label label">
+                     <label for="useCopy">Use copy</label>
+                 </td>
+                 <td class="field">
+                     <input id="useCopy" type="checkbox" data-bind="checked: useCopy"/>
+                 </td>
+             </tr>
+             <tr>
+                 <td></td>
+                 <td><button data-bind="click: promote">Save Settings</button></td>
+             </tr>
+         </table>
+
+     </form>
+
  </body>
  </html>
