@@ -39,7 +39,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
              //TODO : promotion
 			 var webcontext = VSS.getWebContext();
 			 
-			 	  var promoteJson = '{"status": "' + self.targetStatus() + '", "comment" : "' + self.comment() + '", "ciUser": "' +  webcontext.user.name + '", "timestamp" : ISO8601, "dryRun" : false, "targetRepo" : "' + self.promoteRepository() + '" ,"copy": '+ self.useCopy() +', "artifacts" : true, "dependencies" : '+ self.includeDependencies() +', "properties": { ' + self.properties() + ' }, "failFast": true}'; 
+			 	  var promoteJson = '{"status": "' + self.targetStatus() + '", "comment" : "' + self.comment() + '", "ciUser": "' +  webcontext.user.name + '", "dryRun" : false, "targetRepo" : "' + self.promoteRepository() + '" ,"copy": '+ self.useCopy() +', "artifacts" : true, "dependencies" : '+ self.includeDependencies() +', "properties": { ' + self.properties() + ' }, "failFast": true}'; 
 				   
 				   $.ajax({
                     method: 'POST',
