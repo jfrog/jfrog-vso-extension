@@ -28,6 +28,10 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                
                $.getJSON(apiUrl, function(data ,status){
 
+                 if(!data.variables)
+                 {
+                     data.variables = {};
+                 }
                  data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo());
                  data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo());
                  data = addVariablesToBuildDefinition(data,"ArifactoryUsername", self.userName());
