@@ -1,12 +1,13 @@
 define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient"], function (require, exports, ExtensionData, Q, ko, buildClient) {
 	
-		
+		console.log("start");
          var buildId = parseInt(location.search.substr("?id=".length));
 		 var apiClient = buildClient.getClient();
 		  var webcontext = VSS.getWebContext();
           var apiUrl = webcontext.collection.uri + webcontext.project.name +"/_apis/build/builds/" + buildId + "?api-version=2.0";
-         
-         $.getJSON(apiUrl, function(build ,status){
+         console.log("api call");
+         var buildClient = apiClient.getBuild(buildId).then(function(build){
+             console.log(build);
              var viewModel = new PromoteViewModel(buildId, build.definition.id, build.definition.name);
 			 getSettings(viewModel, build.definition.id);
 			 ko.applyBindings(viewModel);
@@ -59,16 +60,19 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
         
     function getSettings(viewModel, buildDefId) {
         
-		
+		console.log("getSettings");
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-           
-            extensionSettingsService.getValue("setupBuildArtifactory" + viewModel.buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
+           console.log(buildDefId);
+           console.log(viewModel);
+            extensionSettingsService.getValue("setupBuildArtifactory" + buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
+                            console.log(loadedViewModel);
 							viewModel.artifactoryUri(loadedViewModel.artifactoryUri);
                             viewModel.userName(loadedViewModel.username);
                             viewModel.password(loadedViewModel.password);
-                            viewModel.promoteRepo(loadedViewModel.promoteRepo)
+                            viewModel.promoteRepository(loadedViewModel.promoteRepo)
                             console.log("hey I loaded creds")
+                            console.log(viewModel);
                          }
             });
         });
