@@ -3,13 +3,15 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		
          var buildId = parseInt(location.search.substr("?id=".length));
 		 var apiClient = buildClient.getClient();
-		 
-		 apiClient.getBuild(buildId).then(function(build){
-			 var viewModel = new PromoteViewModel(buildId, build.definition.id, build.definition.name);
+		  var webcontext = VSS.getWebContext();
+          var apiUrl = webcontext.collection.uri + webcontext.project.name +"/_apis/build/builds/" + buildId + "?api-version=2.0";
+         
+         $.getJSON(apiUrl, function(build ,status){
+             var viewModel = new PromoteViewModel(buildId, build.definition.id, build.definition.name);
 			 getSettings(viewModel, build.definition.id);
 			 ko.applyBindings(viewModel);
 			 VSS.notifyLoadSucceeded();
-		 })
+         });
          
          function PromoteViewModel(buildId, buildDefId, buildDefName){
             var self = this;
