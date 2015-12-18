@@ -1,13 +1,19 @@
 define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient"], function (require, exports, ExtensionData, Q, ko, buildClient) {
 	
-		console.log("start");
          var buildId = parseInt(location.search.substr("?id=".length));
 		 var apiClient = buildClient.getClient();
-		  var webcontext = VSS.getWebContext();
-          var apiUrl = webcontext.collection.uri + webcontext.project.name +"/_apis/build/builds/" + buildId + "?api-version=2.0";
-         console.log("api call");
+		 var webcontext = VSS.getWebContext();
+          
+         var apiUrl = webcontext.collection.uri + webcontext.project.name +"/_apis/build/builds/" + buildId + "?api-version=2.0";
+         
+        //  $.getJSON(apiUrl,function(build, status){
+        //      var viewModel = new PromoteViewModel(buildId, build.definition.id, build.definition.name);
+		// 	 getSettings(viewModel, build.definition.id);
+		// 	 ko.applyBindings(viewModel);
+		// 	 VSS.notifyLoadSucceeded();
+        //  })
+         
          var buildClient = apiClient.getBuild(buildId).then(function(build){
-             console.log(build);
              var viewModel = new PromoteViewModel(buildId, build.definition.id, build.definition.name);
 			 getSettings(viewModel, build.definition.id);
 			 ko.applyBindings(viewModel);
@@ -33,14 +39,14 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
              //TODO : promotion
 			 var webcontext = VSS.getWebContext();
 			 
-			 	  var promoteJson = '{"status": "' + self.targetStatus + '", "comment" : "' + self.comment + '", "ciUser": "' +  webcontext.user.name + '", "timestamp" : "ISO8601", "dryRun" : false, "copy": '+ self.useCopy +', "artifacts" : true, "dependencies" : '+ self.includeDependencies +', "properties": { ' + self.properties + ' }, "failFast": true}'; 
+			 	  var promoteJson = '{"status": "' + self.targetStatus() + '", "comment" : "' + self.comment() + '", "ciUser": "' +  webcontext.user.name + '", "timestamp" : ISO8601, "dryRun" : false, "targetRepo" : "' + self.promoteRepository() + '" ,"copy": '+ self.useCopy() +', "artifacts" : true, "dependencies" : '+ self.includeDependencies() +', "properties": { ' + self.properties() + ' }, "failFast": true}'; 
 				   
 				   $.ajax({
                     method: 'POST',
                     contentType: 'application/json; charset=utf-8',
-                    url: self.artifactoryUri + '/' + 'api/build/promote/' + self.buildDefName + '/' + buildId,
+                    url: self.artifactoryUri() + '/' + 'api/build/promote/' + self.buildDefName + '/' + buildId,
                     beforeSend: function (xhr) {
-                        xhr.setRequestHeader ("Authorization", "Basic " + btoa(self.userName + ":" + self.password));
+                        xhr.setRequestHeader ("Authorization", "Basic " + btoa(self.userName() + ":" + self.password()));
                     },
                     async: false,
                     data: promoteJson,
@@ -64,10 +70,13 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
            console.log(buildDefId);
            console.log(viewModel);
+             extensionSettingsService.getValue("artifactoryUri", {scopeType: "Default"}).then(function(artifactoryUriValue){
+               viewModel.artifactoryUri(artifactoryUriValue);
+            });
+           
             extensionSettingsService.getValue("setupBuildArtifactory" + buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
                             console.log(loadedViewModel);
-							viewModel.artifactoryUri(loadedViewModel.artifactoryUri);
                             viewModel.userName(loadedViewModel.username);
                             viewModel.password(loadedViewModel.password);
                             viewModel.promoteRepository(loadedViewModel.promoteRepo)

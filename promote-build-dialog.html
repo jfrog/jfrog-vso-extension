@@ -48,10 +48,18 @@
              </tr>
              <tr>
                  <td class="option-label label">
-                     <label for="targetStatus">Comment</label>
+                     <label for="comment">Comment</label>
                  </td>
                  <td class="field">
-                     <textarea data-bind="value: comment"></textarea>
+                     <textarea id="comment" data-bind="value: comment"></textarea>
+                 </td>
+             </tr>
+             <tr>
+                 <td class="option-label label">
+                     <label for="properties">Attach properties</label>
+                 </td>
+                 <td class="field">
+                     <input id="properties" data-bind="value: properties"/>
                  </td>
              </tr>
              <tr>
