@@ -28,6 +28,18 @@
 				"uri": "setup-artifactory.html"
 			}
 		},
+		 {
+            "id": "artifactory-build-info-tab",
+            "type": "ms.vss-build-web.build-results-tab",
+            "description": "A tab in build result to enforce Artifactory integration",
+            "targets": [
+                "ms.vss-build-web.build-results-view"
+            ],
+            "properties": {
+                "name": "JFrog Artifactory",
+                 "uri": "artifactory-build-info.html"
+            }
+        },
 		{
          "id": "promote-build-action",
          "type": "ms.vss-web.action",
@@ -78,6 +90,9 @@
 			"path": "setup-artifactory.html", "addressable": true
 		},
 		{
+			"path": "artifactory-build-info.html", "addressable": true
+		},
+		{
 			"path": "promote-build-action.html", "addressable": true
 		},
 		{
@@ -99,7 +114,7 @@
 			"path": "css", "addressable": true
 		},
 		{
-			"path": "images/jfrog.png", "addressable": true
+			"path": "images", "addressable": true
 		}
 	]
 }

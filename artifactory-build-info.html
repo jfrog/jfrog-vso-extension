@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<head>
+    <style type="text/css">
+         .summary-section-header {
+            font-size: 18px;
+            color: #4D6082;
+            border-bottom: 1px solid #f2f2f2;
+            padding: 10px 0 3px 0;
+        }
+        
+        .subsection {
+             font-size: 14px;
+        }
+        .artifactory-build-info {
+            overflow: auto;
+        }     
+        .right-section {
+            margin-left: 50%;
+        }
+        .left-section {
+            float: left;
+            width: 48%;
+        }
+    </style>
+     <script src="lib/VSS.SDK.js"></script>
+    <script type="text/javascript">
+   VSS.init({
+        explicitNotifyLoaded: true, 
+        usePlatformScripts: true,
+        usePlatformStyles: true
+    });
+    
+    VSS.ready(function () {
+            require(["scripts/build-info"], function (extensionData) { });
+        });
+    
+    </script>
+</head>
+
+<body class="artifactory-build-info">
+    <div class="buildvnext-build-summary build-info-details">
+        <div class="left-section">
+            <div class="summary-section">
+                <div class="summary-section-header">Artifactory Build Info
+                    <a data-bind="attr: {href: artifactoryBuildInfoUri}" target="blank">
+                    <img src="images/Artifactory.png" height="40" title="Build Information" />
+                    </a>
+                    <img src="images/Artifactory.png" data-bind="click: promote" height="40" title="Promote Build" />
+                </div>
+                        
+                <div class="summary-item">
+                    <label>Build agent</label>
+                    <span data-bind="text: buildAgent" />
+                </div>
+                <div class="summary-item">
+                    <label>Agent</label>
+                    <span data-bind="text: agent" />
+                </div>
+                <div class="summary-item">
+                    <label>Artifactory Principal</label>
+                    <span data-bind="text: artifactoryPrincipal" />
+                </div>
+                ...
+            </div>
+        </div>
+        <div class="right-section">
+        <div class="summary-section-header">History</div>    
+        <div class="summary-section" data-bind="foreach: statuses">
+            <div class="summary-section-header subsection" data-bind="text: status" ></div>
+            <div class="summary-item" >
+                <label>Repository</label>
+                <span data-bind="text: repository" />
+            </div>
+            <div class="summary-item" data-bind="if: comment != ''">
+                <label>Comment</label>
+                <span data-bind="text: comment" />
+            </div>
+            <div class="summary-item" >
+                <label>CI User</label>
+                <span data-bind="text: ciUser" />
+            </div>
+             <div class="summary-item" >
+                <label>Artifcactory User</label>
+                <span data-bind="text: user" />
+            </div>
+        </div>
+        </div>
+</body>
+</html>

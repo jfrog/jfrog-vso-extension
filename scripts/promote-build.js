@@ -1,5 +1,9 @@
-define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient"], function (require, exports, ExtensionData, Q, ko, buildClient) {
+define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient", "VSS/Controls", "VSS/Controls/StatusIndicator"], function (require, exports, ExtensionData, Q, ko, buildClient, Controls, StatusIndicator) {
 	
+    
+         
+          
+         
          var buildId = parseInt(location.search.substr("?id=".length));
 		 var apiClient = buildClient.getClient();
 		 var webcontext = VSS.getWebContext();
@@ -36,12 +40,38 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 			self.properties = ko.observable('ex : "components":["c1","c3","c14"], "release-name": ["fb3-ga"]');
                        
             this.promote = function(){
-             //TODO : promotion
+             
+              var container = $(".artForm");
+         
+            var waitcontrol = Controls.create(StatusIndicator.WaitControl, container, {message: "Promotion in progress.", 
+                cancellable: true, 
+                target: container
+                });
+            waitcontrol.startWait();  
 			 var webcontext = VSS.getWebContext();
 			 
-			 	  var promoteJson = '{"status": "' + self.targetStatus() + '", "comment" : "' + self.comment() + '", "ciUser": "' +  webcontext.user.name + '", "dryRun" : false, "targetRepo" : "' + self.promoteRepository() + '" ,"copy": '+ self.useCopy() +', "artifacts" : true, "dependencies" : '+ self.includeDependencies() +', "properties": { ' + self.properties() + ' }, "failFast": true}'; 
+			 	  var promoteJson = '{"status": "' + self.targetStatus() + '"';
+                  if(self.comment() != "")
+                  {
+                      promoteJson = promoteJson + ', "comment" : "' + self.comment() +'"';
+                  } 
+                  promoteJson = promoteJson  + ', "ciUser": "' +  webcontext.user.name + '", "dryRun" : false';
+                   
+                  if(self.promoteRepository() != "")
+                  {
+                       promoteJson = promoteJson  + ', "targetRepo" : "' + self.promoteRepository() + '"';
+                  }
+                  promoteJson = promoteJson  + ',"copy": '+ self.useCopy() +', "artifacts" : true, "dependencies" : '+ self.includeDependencies();
+                 
+                  if(self.properties() != "" && self.properties() != 'ex : "components":["c1","c3","c14"], "release-name": ["fb3-ga"]')
+                  {
+                       promoteJson = promoteJson  +', "properties": { ' + self.properties() + ' }';
+                  }
+                  
+                  promoteJson = promoteJson  +', "failFast": true}';
 				   
-				   $.ajax({
+                   
+                   $.ajax({
                     method: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     url: self.artifactoryUri() + '/' + 'api/build/promote/' + self.buildDefName + '/' + buildId,
@@ -52,11 +82,14 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                     data: promoteJson,
                     success: function( response ){
                         var i = response;
-                        alert("prommotion succeed");
+                        // saveSettings(self);                        
+                        waitcontrol.endWait();
+                        alert("TODO : prommotion succeed");
                     },
                     error: function(jqXHR, exception)
                     {
-                        alert('error');
+                        waitcontrol.endWait();
+                        alert(jqXHR.error().responseJSON.errors[0].message);
                     }
                        
                 });        
@@ -68,62 +101,31 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
         
 		console.log("getSettings");
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-           console.log(buildDefId);
-           console.log(viewModel);
-             extensionSettingsService.getValue("artifactoryUri", {scopeType: "Default"}).then(function(artifactoryUriValue){
+               extensionSettingsService.getValue("artifactoryUri", {scopeType: "Default"}).then(function(artifactoryUriValue){
                viewModel.artifactoryUri(artifactoryUriValue);
             });
            
             extensionSettingsService.getValue("setupBuildArtifactory" + buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
-                            console.log(loadedViewModel);
                             viewModel.userName(loadedViewModel.username);
                             viewModel.password(loadedViewModel.password);
                             viewModel.promoteRepository(loadedViewModel.promoteRepo)
-                            console.log("hey I loaded creds")
-                            console.log(viewModel);
                          }
             });
         });
     }
-
-//   // Use an IIFE to create an object that satisfies the IContributedMenuSource contract
-    //   var menuContributionHandler = (function () {
-    //      "use strict";
-    //      return {
-    //          // This is a callback that gets invoked when a user clicks the newly contributed menu item
-    //          // The actionContext parameter contains context data surrounding the circumstances of this
-    //          // action getting invoked.
-    //          execute: function (actionContext) {
-    //             // Get the Web Context to create the uri
-    //             var vstsContext = VSS.getWebContext();
-    //             // Navigate to the new View Assoicated Work Items hub.
-    //             // Fabrikam is the extension's namespace and Fabrikam.HelloWorld is the hub's id.
-    //             var extensionContext = VSS.getExtensionContext();
-    //                       
-    //             var promoteJson = '{"status": "staged", "comment" : "Tested on all target platforms.", "ciUser": "jroquelaure", "timestamp" : "ISO8601", "dryRun" : false, "copy": false, "artifacts" : true, "dependencies" : true, "properties": { "components":["c1","c3","c14"], "release-name": ["fb3-ga"] }, "failFast": false}';          
-    //             
-    //             $.ajax({
-    //                 method: 'POST',
-    //                 contentType: 'application/json; charset=utf-8',
-    //                 url: 'https://internalsandbox.artifactoryonline.com/internalsandbox/api/build/promote/mavenTest/78',
-    //                 beforeSend: function (xhr) {
-    //                     xhr.setRequestHeader ("Authorization", "Basic " + btoa("vso-deployer" + ":" + "VS0Deployer31"));
-    //                 },
-    //                 async: false,
-    //                 data: promoteJson,
-    //                 success: function( response ){
-    //                     var i = response;
-    //                     alert("prommotion succeed");
-    //                 },
-    //                 error: function(jqXHR, exception)
-    //                 {
-    //                     alert('error');
-    //                 }
-    //                    
-    //             });    
-    //                           
-    //           
-    //          }
-    //      };
-    //  }());
+    // 
+    // function saveSettings(viewModel) {
+    //            
+    //     var saveViewModel = {
+    //         username: viewModel.userName(),
+    //         password: viewModel.password(),
+    //         promoteRepo: viewModel.promoteRepository(),
+    //         artifactoryUrl: viewModel.artifactoryUri()
+    //     };
+    //     VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
+    //            extensionSettingsService.setValue("PromoteBuildArtifactory" + viewModel.buildDefId, saveViewModel, {scopeType: "Default"}).then(function (value) {
+    //                //console.log(value);
+    //         });
+    //     });
+    //}

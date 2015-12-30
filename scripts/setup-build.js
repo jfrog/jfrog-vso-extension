@@ -7,7 +7,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
          
          VSS.notifyLoadSucceeded();
          
-        
+                
          
          function SetupViewModel(){
             var self = this;
@@ -32,11 +32,11 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                  {
                      data.variables = {};
                  }
-                 data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo());
-                 data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo());
-                 data = addVariablesToBuildDefinition(data,"ArtifactoryUsername", self.userName());
-                 data = addVariablesToBuildDefinition(data,"ArtifactoryApiKey", self.password());
-                 data = addVariablesToBuildDefinition(data,"ArtifactoryUri", self.artifactoryUri());
+                 data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo(), false);
+                 data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo(), false);
+                 data = addVariablesToBuildDefinition(data,"ArtifactoryUsername", self.userName(), false);
+                 data = addVariablesToBuildDefinition(data,"ArtifactoryApiKey", self.password(), false);
+                 data = addVariablesToBuildDefinition(data,"ArtifactoryUri", self.artifactoryUri(), false);
                  
                  var client = buildClient.getClient();
                  client.updateDefinition(data, defId, data.project.id).then(function(result){
@@ -50,8 +50,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 	  });
         
     function getSettings(viewModel) {
-        console.log(viewModel.artifactoryUri);
-        VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
+            VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
            
             extensionSettingsService.getValue("artifactoryUri", {scopeType: "Default"}).then(function(artifactoryUriValue){
                viewModel.artifactoryUri(artifactoryUriValue);
@@ -73,10 +72,13 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
         });
     }
     
-    function addVariablesToBuildDefinition(buildDef, variableName, value){
+    function addVariablesToBuildDefinition(buildDef, variableName, value, isSecret){
           var tempMap = {};
           tempMap["value"] = value;
+          tempMap["isSecret"] = isSecret;
+          tempMap["allowOverride"] = "false";
           buildDef.variables[variableName] = tempMap;
+          
           return buildDef;
     }
     
@@ -86,7 +88,8 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
             username: viewModel.userName(),
             password: viewModel.password(),
             publishRepo: viewModel.publishRepo(),
-            promoteRepo: viewModel.promoteRepo()
+            promoteRepo: viewModel.promoteRepo(),
+            artifactoryUrl: viewModel.artifactoryUri()
         };
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
                extensionSettingsService.setValue("setupBuildArtifactory" + viewModel.buildDefId, saveViewModel, {scopeType: "Default"}).then(function (value) {
