@@ -41,13 +41,11 @@
     <div class="buildvnext-build-summary build-info-details">
         <div class="left-section">
             <div class="summary-section">
-                <div class="summary-section-header">Artifactory Build Info
-                    <a data-bind="attr: {href: artifactoryBuildInfoUri}" target="blank">
+                <div class="summary-section-header">Artifactory Build Info</div>
+                 <a  style="float: right;" data-bind="attr: {href: artifactoryBuildInfoUri}" target="blank">
                     <img src="images/Artifactory.png" height="40" title="Build Information" />
-                    </a>
-                    <img src="images/Artifactory.png" data-bind="click: promote" height="40" title="Promote Build" />
-                </div>
-                        
+                 </a>
+                 <img style="float: right;" src="images/Artifactory.png" data-bind="click: promote" height="40" title="Promote Build" />
                 <div class="summary-item">
                     <label>Build agent</label>
                     <span data-bind="text: buildAgent" />
