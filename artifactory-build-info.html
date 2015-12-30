@@ -42,17 +42,19 @@
         <div class="left-section">
             <div class="summary-section">
                 <div class="summary-section-header">Artifactory Build Info</div>
+                <div data-bind="visible: isLoaded()">
                  <a data-bind="attr: {href: artifactoryBuildInfoUri}" target="blank">
                     <img src="images/Artifactory.png" height="40" title="Build Information" />
                  </a>
                  <img src="images/Artifactory.png" data-bind="click: promote" height="40" title="Promote Build" />
+                </div>
                 <div class="summary-item">
                     <label>Build agent</label>
-                    <span data-bind="text: buildAgent" />
+                    <span data-bind="text: buildAgent()" />
                 </div>
                 <div class="summary-item">
                     <label>Agent</label>
-                    <span data-bind="text: agent" />
+                    <span data-bind="text: agent()" />
                 </div>
                 <div class="summary-item">
                     <label>Artifactory Principal</label>

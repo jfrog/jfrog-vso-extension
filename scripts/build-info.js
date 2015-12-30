@@ -1,10 +1,14 @@
 
+
 define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient"], function (require, exports, ExtensionData, Q, ko, buildClient) {
-		 var sharedConfig = VSS.getConfiguration();
+		var viewModel = new BuildInfoViewModel();
+		 ko.applyBindings(viewModel);
+		var sharedConfig = VSS.getConfiguration();
             if (sharedConfig) {
+				
                 // register your extension with host through callback
                 sharedConfig.onBuildChanged(function (build) {
-
+				
 				var buildId = build.buildNumber
 				if(buildId > 0)
 				{
@@ -22,13 +26,14 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 											success: function(data) {
 												//var result = JSON.parse(data);
 												var buildInfoUrl =loadedViewModel.artifactoryUrl + 'webapp/builds/' + build.definition.name + '/' + buildId;
-												var viewModel = new BuildInfoViewModel(data.buildInfo, buildInfoUrl);
-												ko.applyBindings(viewModel);
-													
+												
+												viewModel.load(data.buildInfo, buildInfoUrl);
 												VSS.notifyLoadSucceeded();
+												
 												},
 											error: function(jqXHR, exception) { 
-												alert(jqXHR.error().responseJSON.errors[0].message);
+												reset(viewModel);
+												console.log(jqXHR.error().responseJSON.errors[0].message)
 											},
 											beforeSend: function (xhr) {
 															xhr.setRequestHeader ("Authorization", "Basic " + btoa(loadedViewModel.username + ":" + loadedViewModel.password));
@@ -47,29 +52,62 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 					});
 			}
 	 
-	function BuildInfoViewModel(parsedData, buildInfoUrl){
+	function BuildInfoViewModel(){
 		var self = this;
 		
-		self.id = parsedData.number;
-		self.agentName = parsedData.agent.name;
-		self.agentVersion = parsedData.agent.version;
-		self.buildAgentName = parsedData.buildAgent.name;
-		self.buildAgentVersion = parsedData.buildAgent.version;
+		self.isLoaded = ko.observable(false);
+		self.id = ko.observable("");
+		self.agentName = ko.observable("");
+		self.agentVersion = ko.observable("");
+		self.buildAgentName =  ko.observable("");
+		self.buildAgentVersion = ko.observable("");
 		
-		self.artifactoryBuildInfoUri = buildInfoUrl;
-		self.artifactoryPrincipal = parsedData.artifactoryPrincipal;
-		self.modules = parsedData.modules;
+		self.artifactoryBuildInfoUri = ko.observable("");
+		self.artifactoryPrincipal = ko.observable("");
+		self.modules =  ko.observable("");
 		
 		self.statuses = ko.observableArray();
-		if(parsedData.statuses)
-		{
-			parsedData.statuses.forEach(function(element) {
-			self.statuses.push(new StatusViewModel(element));	
-			}, this);
-		}
+		self.agent = ko.computed(function(){
+			if(self.isLoaded()){
+				return self.agentName() + ' (v ' + self.agentVersion() + ')';
+			}
+			else
+			{
+				return "";
+			} 
+		}) 
+		self.buildAgent = ko.computed(function(){
+			if(self.isLoaded()){
+				return self.buildAgentName() + ' (v ' + self.buildAgentVersion() + ')'
+			}
+			else
+			{
+				return "";
+			} 
+		}) 
 		
-		self.agent = self.agentName + ' (v ' + self.agentVersion + ')' 
-		self.buildAgent = self.buildAgentName + ' (v ' + self.buildAgentVersion + ')' 
+		
+		
+		self.load = function(parsedData, buildInfoUrl){
+			self.id(parsedData.number);
+			self.agentName(parsedData.agent.name);
+			self.agentVersion(parsedData.agent.version);
+			self.buildAgentName(parsedData.buildAgent.name);
+			self.buildAgentVersion(parsedData.buildAgent.version);
+			
+			self.artifactoryBuildInfoUri(buildInfoUrl);
+			self.artifactoryPrincipal(parsedData.artifactoryPrincipal);
+			self.modules(parsedData.modules);
+			
+			self.statuses([]);
+			if(parsedData.statuses)
+			{
+				parsedData.statuses.forEach(function(element) {
+				self.statuses.push(new StatusViewModel(element));	
+				}, this);
+			}
+			self.isLoaded(true);
+		}
 		
 		self.promote = function()
 		{
@@ -83,7 +121,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 			width: 600,
 			height: 300,
 			buttons: null,
-			urlReplacementObject: {buildId: self.id}  
+			urlReplacementObject: {buildId: self.id()}  
 			};
 		
 			VSS.getService(VSS.ServiceIds.Dialog).then(function(dialogService) {
@@ -104,6 +142,15 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		self.ciUser = parsedData.ciUser;
 		self.timestampDate = parsedData.timestampDate;
 	}
+	
+	var reset = function(obj){
+			for(var prop in obj)
+			{
+				 if ( obj.hasOwnProperty( prop ) && ko.isComputed(obj[prop]) == false && ko.isObservable( obj[ prop ] ) ) {
+					obj[ prop ]( undefined );
+				}
+			}
+		}
 
 	 function getArtifactoryUrl(buildDefId) {
             VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
