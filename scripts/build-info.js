@@ -1,62 +1,53 @@
 
 define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout", "TFS/Build/RestClient"], function (require, exports, ExtensionData, Q, ko, buildClient) {
-		
-			VSS.getService(VSS.ServiceIds.Navigation).then(function(navigationService) {
-			// Get current hash value from host url
-			navigationService.getHash().then(function (hash) {
-			var sURLVariables = hash.split('&');
-			var buildId = 0;
-			for (var i = 0; i < sURLVariables.length; i++)
-			{
-				var sParameterName = sURLVariables[i].split('=');
-				if (sParameterName[0] == "buildId")
+		 var sharedConfig = VSS.getConfiguration();
+            if (sharedConfig) {
+                // register your extension with host through callback
+                sharedConfig.onBuildChanged(function (build) {
+
+				var buildId = build.buildNumber
+				if(buildId > 0)
 				{
-					 buildId = parseInt(sParameterName[1]);
-				}
-			}
-			if(buildId > 0)
-			{
-				var apiClient = buildClient.getClient();
-								
-				apiClient.getBuild(buildId).then(function(build){
-					
-						VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-						extensionSettingsService.getValue("setupBuildArtifactory" + build.definition.id, {scopeType: "Default"}).then(function(loadedViewModel){
-									if(loadedViewModel){
-										$.ajax({
-										url: loadedViewModel.artifactoryUrl +'/api/build/' + build.definition.name + '/' + buildId,
-										type: 'GET',
-										dataType: 'json',
-										success: function(data) {
-											//var result = JSON.parse(data);
-											var viewModel = new BuildInfoViewModel(data.buildInfo);
-											ko.applyBindings(viewModel);
-												
-											VSS.notifyLoadSucceeded();
-											},
-										error: function(jqXHR, exception) { 
-											alert(jqXHR.error().responseJSON.errors[0].message);
-										},
-										beforeSend: function (xhr) {
-														xhr.setRequestHeader ("Authorization", "Basic " + btoa(loadedViewModel.username + ":" + loadedViewModel.password));
-													}
-										});
-									}
-									else
-									{
-										return "error";
-									}
-							});
-						});
+					var apiClient = buildClient.getClient();
+									
+					apiClient.getBuild(buildId).then(function(build){
 						
+							VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
+							extensionSettingsService.getValue("setupBuildArtifactory" + build.definition.id, {scopeType: "Default"}).then(function(loadedViewModel){
+										if(loadedViewModel){
+											$.ajax({
+											url: loadedViewModel.artifactoryUrl +'/api/build/' + build.definition.name + '/' + buildId,
+											type: 'GET',
+											dataType: 'json',
+											success: function(data) {
+												//var result = JSON.parse(data);
+												var buildInfoUrl =loadedViewModel.artifactoryUrl + 'webapp/builds/' + build.definition.name + '/' + buildId;
+												var viewModel = new BuildInfoViewModel(data.buildInfo, buildInfoUrl);
+												ko.applyBindings(viewModel);
+													
+												VSS.notifyLoadSucceeded();
+												},
+											error: function(jqXHR, exception) { 
+												alert(jqXHR.error().responseJSON.errors[0].message);
+											},
+											beforeSend: function (xhr) {
+															xhr.setRequestHeader ("Authorization", "Basic " + btoa(loadedViewModel.username + ":" + loadedViewModel.password));
+														}
+											});
+										}
+										else
+										{
+											return "error";
+										}
+								});
+							});
+							
+						});
+				}                      
 					});
-			}                      
-				});
-			});
-			
-         
+			}
 	 
-	function BuildInfoViewModel(parsedData){
+	function BuildInfoViewModel(parsedData, buildInfoUrl){
 		var self = this;
 		
 		self.id = parsedData.number;
@@ -65,7 +56,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		self.buildAgentName = parsedData.buildAgent.name;
 		self.buildAgentVersion = parsedData.buildAgent.version;
 		
-		self.artifactoryBuildInfoUri = "https://gcartifactory-us.jfrog.info/artifactory/webapp/builds/MavenDemo/19";
+		self.artifactoryBuildInfoUri = buildInfoUrl;
 		self.artifactoryPrincipal = parsedData.artifactoryPrincipal;
 		self.modules = parsedData.modules;
 		
