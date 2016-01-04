@@ -1,0 +1,102 @@
+{
+  "id": "07fc5c20-6772-11e5-abde-6901d3d00465",
+  "name": "JFrogArtifactoryDeployer",
+  "friendlyName": "JFrog Artifactory Deployer",
+  "description": " This task helps you to deploy generic build result artifacts to Artifactory",
+  "author": "jroquelaure",
+  "helpMarkDown": "Upload artifacts to JFrog Artifactory using JFrog Artifactory cli.",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "1",
+    "Patch": "5"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "JFrogArtifactoryDeployer $(message)",
+  "inputs": [
+    {
+      "name": "artifactoryEndpointName",
+      "type": "connectedService:Generic",
+      "label": "Artifactory URL",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Artifactory URL to deploy your artifacts JFrogArtifactoryDeployer is run."
+    },
+    {
+      "name": "targetRepo",
+      "type": "string",
+      "label": "Target Repository",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The repository path to deploy"
+    },
+    {
+      "name": "overrideCredentials",
+      "type": "boolean",
+      "label": "Override Credentials",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Override credentials given in service configuration."
+    },
+    {
+      "name": "login",
+      "type": "string",
+      "label": "User Login",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "User with permissions to deploy to the selected Artifactory repository"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "User Api Key",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Password for the user entered above. Note: It is higly recommended to use an encrypted password so that your password is never passed in clear text to Artifactory."
+    },
+    {
+	"name": "artifactoryCliPath",
+	"type": "filePath",
+	"label": "Path to JFrog Artifactory Cli exe",
+	"defaultValue": "",
+	"required": "true",
+	"helpMarkDown" : "Path to the Jfrog Artifactory Cli executable [More Information](https://github.com/JFrogDev/artifactory-cli-go)"
+    },
+    {
+      "name": "contents",
+      "type": "string",
+      "label": "Path to the Artifacts.",
+      "defaultValue": "*.*",
+      "required": true,
+      "helpMarkDown" : "Path to the artifacts to be uploaded.The path can include one or multiple artifacts by using the * wildcard.TFS variables can also be used."
+    },
+    {
+      "name": "properties",
+      "type": "string",
+      "label": "Properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "List of properties in the form of key1=value1;key2=value2;... to be attached to uploaded artifacts." 
+    },
+    {
+      "name": "includeBuildInfo",
+      "type": "boolean",
+      "label": "Enable build information",
+      "defaultValue": "true",
+      "required": true,
+      "helpMarkDown": "Enable/Disable build information to be deployed to Artifactory.(Not yet implemented)"
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\ArtifactoryDeploy.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

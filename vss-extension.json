@@ -14,6 +14,40 @@
 		"default": "images/jfrog.png"	
 	},
 	"scopes": ["vso.build"],
+	"categories": [
+		"Build and release"
+	],
+	"tags":[
+		"JFrog",
+		"Artifactory",
+		"Artifact",
+		"Repository"
+	],
+	"screenshots": [
+		{
+			"path": "images/screenshotBuildInfo.png"
+		}
+	],
+	"content":	{
+		"details": {
+			"path": "overview.md"
+		}		
+	},
+	"links": {
+		"getstarted": {
+			"uri": "https://www.jfrog.com"
+		},
+		"learn": {
+			"uri": "https://www.jfrog.com/confluence/display/RTF/Welcome+to+Artifactory"
+		},
+		"support": {
+			"uri": "https://www.jfrog.com/support"
+		}
+	},
+	"branding": {
+		"color": "green",
+		"theme": "dark"
+	},
 	"contributions": [
 		{
 			"id": "JFrog.Artifactory",
@@ -83,6 +117,16 @@
 			"properties": {
 				"uri": "setup-build-dialog.html?id={{buildDefId}}"
 			}
+		},
+		{
+			"id": "jfrog-artifactory-deployer-build-task",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "JFrogArtifactoryDeployer"
+			}
 		}
 	],
 	"files": [
@@ -115,6 +159,9 @@
 		},
 		{
 			"path": "images", "addressable": true
+		},
+		{
+			"path": "JFrogArtifactoryDeployer"
 		}
 	]
 }
