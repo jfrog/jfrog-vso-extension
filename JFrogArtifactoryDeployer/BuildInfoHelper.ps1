@@ -47,7 +47,7 @@ function Get-FileHash {
 function GetBuildInformationFromLogsArtCli(){
 	param([string[]]$logsArt)	
 		
-        Write-Host "Get build info"
+        Write-Verbose "Get build info"
 		$info = @{}
 		
         $properties =@{}
@@ -123,10 +123,8 @@ function GetBuildInformationFromLogsArtCli(){
         $info.modules = @()
 		$info.modules += $module
 		
-        Write-Host "convert result to json"
 		$result = ConvertTo-JSON $info -depth 4 -compress
-        Write-Host "convert result to json___done"
-		Write-Host $result
+		Write-Verbose $result
 		
 		Return $result
 }

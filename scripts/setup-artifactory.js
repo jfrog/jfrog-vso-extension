@@ -20,23 +20,24 @@ function saveSettings(scope, selector) {
         };
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
             extensionSettingsService.setValue("artifactoryUri", artifactoryUri, {scopeType: scope}).then(function (value) {
-            });
-            extensionSettingsService.setValue("credentials", credentials, {scopeType: scope}).then(function (value) {
+                extensionSettingsService.setValue("credentials", credentials, {scopeType: scope}).then(function (value) {
+                    $('.statusBarOK').fadeIn('slow').delay(5000).fadeOut('slow');
+                });
             });
             
-            
+                       
             
         });
     }
     function getSettings(scope, selector) {
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-           
-            extensionSettingsService.getValue("artifactoryUri", {scopeType: scope}).then(function(artifactoryUri){
-                $(selector + " .uri").val(artifactoryUri ? artifactoryUri : "");
-            });
-            extensionSettingsService.getValue("credentials", {scopeType: scope}).then(function(credentials){
-                $(selector + " .username").val(credentials ? credentials.username : "");
-                $(selector + " .password").val(credentials ? credentials.password : "");
+                extensionSettingsService.getValue("artifactoryUri", {scopeType: scope}).then(function(artifactoryUri){
+                    $(selector + " .uri").val(artifactoryUri ? artifactoryUri : "");
+                    extensionSettingsService.getValue("credentials", {scopeType: scope}).then(function(credentials){
+                    $(selector + " .username").val(credentials ? credentials.username : "");
+                    $(selector + " .password").val(credentials ? credentials.password : "");
+                    VSS.notifyLoadSucceeded();
+                });
             });
         });
     }

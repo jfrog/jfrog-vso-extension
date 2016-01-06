@@ -35,6 +35,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 											error: function(jqXHR, exception) { 
 												reset(viewModel);
 												console.log(jqXHR.error().responseJSON.errors[0].message)
+												VSS.notifyLoadSucceeded();
 											},
 											beforeSend: function (xhr) {
 															xhr.setRequestHeader ("Authorization", "Basic " + btoa(loadedViewModel.username + ":" + loadedViewModel.password));

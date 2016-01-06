@@ -39,6 +39,15 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 			self.buildDefId = buildDefId;
 			self.buildDefName = buildDefName;
 			self.properties = ko.observable('ex : "components":["c1","c3","c14"], "release-name": ["fb3-ga"]');
+            self.status = ko.observable(true);
+                
+            self.statusMessage = ko.computed(function(){
+                return self.status() ? "Promotion succeed" : "Promotion Failed (see logs in console)" 
+            })
+            
+            self.statusBarClass = ko.computed(function(){
+                return self.status() ? "statusOK" : "statusKO";   
+            })    
                        
             this.promote = function(){
              
@@ -48,7 +57,8 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                 cancellable: true, 
                 target: container
                 });
-            waitcontrol.startWait();  
+            waitcontrol.startWait(); 
+            waitcontrol.setMessage("Pomotion to Artifactory...") 
 			 var webcontext = VSS.getWebContext();
 			 
 			 	  var promoteJson = '{"status": "' + self.targetStatus() + '"';
@@ -83,14 +93,17 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                     data: promoteJson,
                     success: function( response ){
                         var i = response;
-                        // saveSettings(self);                        
+                        // saveSettings(self);   
                         waitcontrol.endWait();
-                        alert("TODO : prommotion succeed");
+                        self.status(true);
+                        $('.statusbar').fadeIn('slow').delay(5000).fadeOut('slow');
                     },
                     error: function(jqXHR, exception)
                     {
                         waitcontrol.endWait();
-                        alert(jqXHR.error().responseText);
+                        self.status(false);
+                        console.log(jqXHR.error().responseText);
+                        $('.statusbar').fadeIn('slow').delay(5000).fadeOut('slow');
                     }
                        
                 });        

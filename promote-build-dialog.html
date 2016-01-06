@@ -20,6 +20,14 @@
              padding: 2px;
              width: 100%;
          }
+         
+         .statusOK {
+             background-color: green;
+         }
+         
+         .statusKO {
+             background-color: red;
+         }
      </style>
  </head>
  <body>
@@ -34,10 +42,11 @@
             require(["scripts/promote-build"], function (extensionData) { });
         });
      </script>
-     <h3>Configure Artifactory </h3>
-
+     <div class="statusbar" style="display:none" data-bind="css: statusBarClass"><span data-bind="text: statusMessage"/></div>
+     <h3>Promote to Artifactory </h3>
+     
      <form>
-         <table class="artForm">
+          <table class="artForm">
              <tr>
                  <td class="option-label label">
                      <label for="targetStatus">Target Status</label>

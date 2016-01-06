@@ -75,7 +75,9 @@ $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
 $cliArgs = "upload $contents $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
 
-if($includeBuildInfo)
+$includeBuildInfoChecked = Convert-String $overrideCredentials Boolean
+
+if($includeBuildInfoChecked)
 {
 	if(!$properties)
 	{
@@ -94,28 +96,27 @@ if($properties)
 	$cliArgs = ($cliArgs + " " + "--props=$properties");
 }
 
-Write-Host "Invoking JFrog Artifactory Cli with $cliArgs"
-
 Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs -OutVariable logsArt
 
-if($includeBuildInfo)
+if($includeBuildInfoChecked)
 {
 	$buildInfo = GetBuildInformationFromLogsArtCli($logsArt)
-}
-$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
-$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
-$apiBuild = [string]::Format("{0}api/build", $artifactoryUrl)
-try{
-	Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
-}
-catch{
-	 Write-Verbose $_.Exception.ToString()
-	$response = $_.Exception.Response
-	$responseStream = $response.GetResponseStream()
-	$streamReader = New-Object System.IO.StreamReader($responseStream)
-	$streamReader.BaseStream.Position = 0
-	$streamReader.DiscardBufferedData()
-	$responseBody = $streamReader.ReadToEnd()
-	$streamReader.Close()
-	Write-Warning "Cannot update build information - $responseBody" 
+
+	$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
+	$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
+	$apiBuild = [string]::Format("{0}api/build", $artifactoryUrl)
+	try{
+		Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
+	}
+	catch{
+		Write-Verbose $_.Exception.ToString()
+		$response = $_.Exception.Response
+		$responseStream = $response.GetResponseStream()
+		$streamReader = New-Object System.IO.StreamReader($responseStream)
+		$streamReader.BaseStream.Position = 0
+		$streamReader.DiscardBufferedData()
+		$responseBody = $streamReader.ReadToEnd()
+		$streamReader.Close()
+		Write-Warning "Cannot update build information - $responseBody" 
+	}
 }
