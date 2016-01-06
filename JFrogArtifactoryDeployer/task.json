@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "1",
-    "Patch": "5"
+    "Patch": "65"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDeployer $(message)",
@@ -65,7 +65,7 @@
 	"label": "Path to JFrog Artifactory Cli exe",
 	"defaultValue": "",
 	"required": "true",
-	"helpMarkDown" : "Path to the Jfrog Artifactory Cli executable [More Information](https://github.com/JFrogDev/artifactory-cli-go)"
+	"helpMarkDown" : "Path to the Jfrog Artifactory Cli executable [More Information](https://bintray.com/jfrog/artifactory-cli-go/artifactory-cli-windows-amd64/view)"
     },
     {
       "name": "contents",

@@ -18,19 +18,20 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
         //  })
          
          var buildClient = apiClient.getBuild(buildId).then(function(build){
-             var viewModel = new PromoteViewModel(buildId, build.definition.id, build.definition.name);
+             var viewModel = new PromoteViewModel(buildId, build.buildNumber, build.definition.id, build.definition.name);
 			 getSettings(viewModel, build.definition.id);
 			 ko.applyBindings(viewModel);
 			 VSS.notifyLoadSucceeded();
          });
          
-         function PromoteViewModel(buildId, buildDefId, buildDefName){
+         function PromoteViewModel(buildId, buildNumber, buildDefId, buildDefName){
             var self = this;
             self.artifactoryUri = ko.observable("");
             self.userName = ko.observable("");
             self.password = ko.observable("");
             self.promoteRepository = ko.observable("");
             self.buildId = buildId;
+            self.number = buildNumber;
 			self.comment = ko.observable("");
 			self.targetStatus = ko.observable("");
 			self.includeDependencies = ko.observable(false);
@@ -74,7 +75,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                    $.ajax({
                     method: 'POST',
                     contentType: 'application/json; charset=utf-8',
-                    url: self.artifactoryUri() + '/' + 'api/build/promote/' + self.buildDefName + '/' + buildId,
+                    url: self.artifactoryUri() + '/' + 'api/build/promote/' + self.buildDefName + '/' + buildNumber,
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader ("Authorization", "Basic " + btoa(self.userName() + ":" + self.password()));
                     },
@@ -89,7 +90,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                     error: function(jqXHR, exception)
                     {
                         waitcontrol.endWait();
-                        alert(jqXHR.error().responseJSON.errors[0].message);
+                        alert(jqXHR.error().responseText);
                     }
                        
                 });        
@@ -114,18 +115,3 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
             });
         });
     }
-    // 
-    // function saveSettings(viewModel) {
-    //            
-    //     var saveViewModel = {
-    //         username: viewModel.userName(),
-    //         password: viewModel.password(),
-    //         promoteRepo: viewModel.promoteRepository(),
-    //         artifactoryUrl: viewModel.artifactoryUri()
-    //     };
-    //     VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-    //            extensionSettingsService.setValue("PromoteBuildArtifactory" + viewModel.buildDefId, saveViewModel, {scopeType: "Default"}).then(function (value) {
-    //                //console.log(value);
-    //         });
-    //     });
-    //}

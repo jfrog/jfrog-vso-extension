@@ -6,7 +6,8 @@ param (
     [string]$properties,
     [string]$overrideCredentials,
     [string]$login,
-    [string]$password
+    [string]$password,
+	[string]$includeBuildInfo
 )
 
 
@@ -25,7 +26,6 @@ function GetArtifactoryEndpoint
 
 }
 
-
 Write-Host 'Entering JFrog Artifactory Deployer task'
 Write-Verbose "artifactoryUrl = $artifactoryUrl"
 Write-Verbose "targetRepo = $targetRepo"
@@ -33,12 +33,12 @@ Write-Verbose "artifactoryCliPath = $artifactoryCliPath"
 Write-Verbose "contents = $contents"
 Write-Verbose "properties = $properties"
 
-
 Write-Host "Import modules"
 # Import the Task.Common dll that has all the cmdlets we need for Build
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 
+. $PSScriptRoot\BuildInfoHelper.ps1
 
 #configure artifactory endpoint
 if(!$artifactoryEndpointName)
@@ -75,6 +75,20 @@ $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
 $cliArgs = "upload $contents $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
 
+if($includeBuildInfo)
+{
+	if(!$properties)
+	{
+		$properties = ""
+	}
+	else
+	{
+		$properties += ";"
+	}
+	$properties += "build.number=$env:BUILD_BUILDNUMBER;"
+	$properties += "build.name=$env:BUILD_DEFINITIONNAME"
+}
+
 if($properties)
 {
 	$cliArgs = ($cliArgs + " " + "--props=$properties");
@@ -82,10 +96,26 @@ if($properties)
 
 Write-Host "Invoking JFrog Artifactory Cli with $cliArgs"
 
-Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs
+Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs -OutVariable logsArt
 
-
-
-
-
-
+if($includeBuildInfo)
+{
+	$buildInfo = GetBuildInformationFromLogsArtCli($logsArt)
+}
+$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
+$apiBuild = [string]::Format("{0}api/build", $artifactoryUrl)
+try{
+	Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
+}
+catch{
+	 Write-Verbose $_.Exception.ToString()
+	$response = $_.Exception.Response
+	$responseStream = $response.GetResponseStream()
+	$streamReader = New-Object System.IO.StreamReader($responseStream)
+	$streamReader.BaseStream.Position = 0
+	$streamReader.DiscardBufferedData()
+	$responseBody = $streamReader.ReadToEnd()
+	$streamReader.Close()
+	Write-Warning "Cannot update build information - $responseBody" 
+}

@@ -9,7 +9,8 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                 // register your extension with host through callback
                 sharedConfig.onBuildChanged(function (build) {
 				
-				var buildId = build.buildNumber
+				var buildId = build.id;
+				var buildNumber = build.buildNumber;
 				if(buildId > 0)
 				{
 					var apiClient = buildClient.getClient();
@@ -20,14 +21,14 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 							extensionSettingsService.getValue("setupBuildArtifactory" + build.definition.id, {scopeType: "Default"}).then(function(loadedViewModel){
 										if(loadedViewModel){
 											$.ajax({
-											url: loadedViewModel.artifactoryUrl +'/api/build/' + build.definition.name + '/' + buildId,
+											url: loadedViewModel.artifactoryUrl +'/api/build/' + build.definition.name + '/' + buildNumber,
 											type: 'GET',
 											dataType: 'json',
 											success: function(data) {
 												//var result = JSON.parse(data);
-												var buildInfoUrl =loadedViewModel.artifactoryUrl + 'webapp/builds/' + build.definition.name + '/' + buildId;
+												var buildInfoUrl =loadedViewModel.artifactoryUrl + 'webapp/builds/' + build.definition.name + '/' + buildNumber;
 												
-												viewModel.load(data.buildInfo, buildInfoUrl);
+												viewModel.load(buildId, data.buildInfo, buildInfoUrl);
 												VSS.notifyLoadSucceeded();
 												
 												},
@@ -57,6 +58,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		
 		self.isLoaded = ko.observable(false);
 		self.id = ko.observable("");
+		self.number = ko.observable("");
 		self.agentName = ko.observable("");
 		self.agentVersion = ko.observable("");
 		self.buildAgentName =  ko.observable("");
@@ -88,8 +90,9 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		
 		
 		
-		self.load = function(parsedData, buildInfoUrl){
-			self.id(parsedData.number);
+		self.load = function(buildId, parsedData, buildInfoUrl){
+			self.id(buildId);
+			self.number(parsedData.number);
 			self.agentName(parsedData.agent.name);
 			self.agentVersion(parsedData.agent.version);
 			self.buildAgentName(parsedData.buildAgent.name);
