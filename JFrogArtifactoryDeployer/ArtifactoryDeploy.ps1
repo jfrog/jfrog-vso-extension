@@ -70,6 +70,8 @@ if(!$artifactoryCliPath)
 	throw ("Path to JFrog Artifactory Cli not set")
 }
 
+$pathToContent = Split-Path $contents
+
 #transform contents as running on windows machine to respect attended format for JFrog Artifactory cli (see https://github.com/JFrogDev/artifactory-cli-go)
 $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
@@ -100,7 +102,7 @@ Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs -OutVariable logsArt
 
 if($includeBuildInfoChecked)
 {
-	$buildInfo = GetBuildInformationFromLogsArtCli($logsArt)
+	$buildInfo = GetBuildInformationFromLogsArtCli($logsArt, $pathToContent)
 
 	$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
 	$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)

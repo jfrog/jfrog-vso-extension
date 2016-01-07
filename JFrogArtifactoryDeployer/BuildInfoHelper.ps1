@@ -45,7 +45,8 @@ function Get-FileHash {
 }
 
 function GetBuildInformationFromLogsArtCli(){
-	param([string[]]$logsArt)	
+	param([string[]]$logsArt)
+    param([string]$pathToContent)	
 		
         Write-Verbose "Get build info"
 		$info = @{}
@@ -108,7 +109,7 @@ function GetBuildInformationFromLogsArtCli(){
 				$artifact.name = $file
 				$artifact.type = [System.IO.Path]::GetExtension($file).split(".")[1]
 				# retrieve the corresponding local file and calculate MD5 and SHA1
-				$items = Get-ChildItem "C:\a\1" -Filter $file -recurse | Get-FileHash -Algorithm MD5, SHA1
+				$items = Get-ChildItem $pathToContent -Filter $file -recurse | Get-FileHash -Algorithm MD5, SHA1
 				foreach($item in $items) {
 					$artifact.md5 = $item.MD5
 					$artifact.sha1 = $item.SHA1
