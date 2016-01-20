@@ -13,8 +13,8 @@
   "demands": [],
   "version": {
     "Major": "1",
-    "Minor": "1",
-    "Patch": "69"
+    "Minor": "10",
+    "Patch": "9"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDeployer $(message)",
@@ -89,7 +89,7 @@
       "label": "Enable build information",
       "defaultValue": "true",
       "required": true,
-      "helpMarkDown": "Enable/Disable build information to be deployed to Artifactory.(Not yet implemented)"
+      "helpMarkDown": "Enable/Disable build information to be deployed to Artifactory."
     }
   ],
   "execution": {

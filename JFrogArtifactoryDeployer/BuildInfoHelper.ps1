@@ -45,11 +45,12 @@ function Get-FileHash {
 }
 
 function GetBuildInformationFromLogsArtCli(){
-	param([string[]]$logsArt)
-    param([string]$pathToContent)	
+    [CmdletBinding()]
+    param([string[]]$logsArt, [string]$pathToContent)	
 		
-        Write-Verbose "Get build info"
-		$info = @{}
+        Write-Host "Get build information"
+		
+        $info = @{}
 		
         $properties =@{}
 		$envVariables = Get-ChildItem Env:
@@ -103,7 +104,8 @@ function GetBuildInformationFromLogsArtCli(){
 			if($logArt.Contains("Uploading artifact:"))
 			{
 				$artifact = @{}
-				$fileUrl = $logArt -replace " Uploading artifact:", ""
+                                             
+				$fileUrl = $logArt.substring($logArt.IndexOf("Uploading artifact")) -replace " Uploading artifact:", ""
 				$fileUrl = $fileUrl.split(';')[0] 
 				$file = Split-Path $fileUrl -leaf 
 				$artifact.name = $file

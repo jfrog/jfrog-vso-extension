@@ -70,14 +70,14 @@ if(!$artifactoryCliPath)
 	throw ("Path to JFrog Artifactory Cli not set")
 }
 
-$pathToContent = Split-Path $contents
+$pathToContent = Split-Path $contents -replace '"', ''
 
 #transform contents as running on windows machine to respect attended format for JFrog Artifactory cli (see https://github.com/JFrogDev/artifactory-cli-go)
 $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
 $cliArgs = "upload $contents $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
 
-$includeBuildInfoChecked = Convert-String $overrideCredentials Boolean
+$includeBuildInfoChecked = Convert-String $includeBuildInfo Boolean
 
 if($includeBuildInfoChecked)
 {
@@ -102,7 +102,7 @@ Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs -OutVariable logsArt
 
 if($includeBuildInfoChecked)
 {
-	$buildInfo = GetBuildInformationFromLogsArtCli($logsArt, $pathToContent)
+	$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent
 
 	$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
 	$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
