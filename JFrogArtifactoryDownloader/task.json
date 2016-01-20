@@ -1,0 +1,78 @@
+{
+  "id": "07fc5c20-6772-11e5-abde-6401d3d00465",
+  "name": "JFrogArtifactoryDownloader",
+  "friendlyName": "JFrog Artifactory Downloader",
+  "description": " This task helps you to download artifacts published to Artifactory during a build",
+  "author": "jroquelaure",
+  "helpMarkDown": "Download Artifacts linked to a build from Artifactory.",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "7"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "JFrogArtifactoryDownloader $(message)",
+  "inputs": [
+    {
+      "name": "artifactoryEndpointName",
+      "type": "connectedService:Generic",
+      "label": "Artifactory URL",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Artifactory URL to download your artifacts from."
+    },
+    {
+      "name": "overrideCredentials",
+      "type": "boolean",
+      "label": "Override Credentials",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Override credentials given in service configuration."
+    },
+    {
+      "name": "login",
+      "type": "string",
+      "label": "User Login",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "User with permissions to deploy to the selected Artifactory repository"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "User Encrypted Password",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Password for the user entered above. Note: It is higly recommended to use an encrypted password so that your password is never passed in clear text to Artifactory."
+    },
+    {
+      "name": "buildName",
+      "type": "string",
+      "label": "Build Name.",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown" : "Build name in JFrog Artifactory."
+    },
+    {
+      "name": "buildStatus",
+      "type": "string",
+      "label": "Build Status",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Status of the build you are looking for. The task will download all artifacts link to the latest build with the defined status. If empty, the task will download artifacts from the latest build" 
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\ArtifactoryDownload.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

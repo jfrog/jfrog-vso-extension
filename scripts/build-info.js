@@ -5,7 +5,8 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		 ko.applyBindings(viewModel);
 		var sharedConfig = VSS.getConfiguration();
             if (sharedConfig) {
-				
+				VSS.getAccessToken().then(function(token){
+					
                 // register your extension with host through callback
                 sharedConfig.onBuildChanged(function (build) {
 				
@@ -13,20 +14,17 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 				var buildNumber = build.buildNumber;
 				if(buildId > 0)
 				{
-					var apiClient = buildClient.getClient();
-									
-					apiClient.getBuild(buildId).then(function(build){
-						
 							VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
 							extensionSettingsService.getValue("setupBuildArtifactory" + build.definition.id, {scopeType: "Default"}).then(function(loadedViewModel){
 										if(loadedViewModel){
 											$.ajax({
+											cache: false,
 											url: loadedViewModel.artifactoryUrl +'/api/build/' + build.definition.name + '/' + buildNumber,
 											type: 'GET',
 											dataType: 'json',
 											success: function(data) {
 												//var result = JSON.parse(data);
-												var buildInfoUrl =loadedViewModel.artifactoryUrl + 'webapp/builds/' + build.definition.name + '/' + buildNumber;
+												var buildInfoUrl =loadedViewModel.artifactoryUrl + '/webapp/builds/' + build.definition.name + '/' + buildNumber;
 												
 												viewModel.load(buildId, data.buildInfo, buildInfoUrl);
 												VSS.notifyLoadSucceeded();
@@ -34,7 +32,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 												},
 											error: function(jqXHR, exception) { 
 												reset(viewModel);
-												console.log(jqXHR.error().responseJSON.errors[0].message)
+												//console.log(jqXHR.error().responseJSON.errors[0].message)
 												VSS.notifyLoadSucceeded();
 											},
 											beforeSend: function (xhr) {
@@ -48,9 +46,8 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 										}
 								});
 							});
-							
-						});
-				}                      
+				}   
+				});                   
 					});
 			}
 	 
@@ -67,6 +64,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 		
 		self.artifactoryBuildInfoUri = ko.observable("");
 		self.artifactoryPrincipal = ko.observable("");
+		self.principal = ko.observable("");
 		self.modules =  ko.observable("");
 		
 		self.statuses = ko.observableArray();
@@ -101,6 +99,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 			
 			self.artifactoryBuildInfoUri(buildInfoUrl);
 			self.artifactoryPrincipal(parsedData.artifactoryPrincipal);
+			self.principal(parsedData.principal);
 			self.modules(parsedData.modules);
 			
 			self.statuses([]);

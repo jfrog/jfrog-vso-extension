@@ -1,8 +1,8 @@
 {
 	"manifestversion": 1,
 	"id": "jfrog-artifactory",
-	"version": "0.1.3",
-	"name": "JFrog Artifactory",
+	"version": "0.1.4",
+	"name": "JFrog Artifactory Integration",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
 	"publisher": "jfrog-soleng",
 	"targets": [
@@ -13,7 +13,7 @@
 	"icons": {
 		"default": "images/jfrog.png"	
 	},
-	"scopes": ["vso.build"],
+	"scopes": ["vso.build","vso.build_execute"],
 	"categories": [
 		"Build and release"
 	],
@@ -127,6 +127,16 @@
 			"properties": {
 				"name": "JFrogArtifactoryDeployer"
 			}
+		},
+		{
+			"id": "jfrog-artifactory-downloader-build-task",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "JFrogArtifactoryDownloader"
+			}
 		}
 	],
 	"files": [
@@ -162,6 +172,9 @@
 		},
 		{
 			"path": "JFrogArtifactoryDeployer"
+		},
+		{
+			"path": "JFrogArtifactoryDownloader"
 		}
 	]
 }
