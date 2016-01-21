@@ -45,8 +45,8 @@
 		}
 	},
 	"branding": {
-		"color": "green",
-		"theme": "dark"
+		"color": "#43a047",
+		"theme": "light"
 	},
 	"contributions": [
 		{

@@ -13,7 +13,7 @@ function Get-FileHash {
         ForEach ($item in $Path) { 
             $item = (Resolve-Path $item).ProviderPath
             If (-Not ([uri]$item).IsAbsoluteUri) {
-                Write-Verbose ("{0} is not a full path, using current directory: {1}" -f $item,$pwd)
+                Write-Host ("{0} is not a full path, using current directory: {1}" -f $item,$pwd)
                 $item = (Join-Path $pwd ($item -replace "\.\\",""))
             }
            If(Test-Path $item -Type Container) {
@@ -46,7 +46,7 @@ function Get-FileHash {
 
 function GetBuildInformationFromLogsArtCli(){
     [CmdletBinding()]
-    param([string[]]$logsArt, [string]$pathToContent)	
+    param([string[]]$logsArt, [string]$pathToContent, [string]$artifactoryUser)	
 		
         Write-Host "Get build information"
 		
@@ -87,9 +87,9 @@ function GetBuildInformationFromLogsArtCli(){
         $formatedDate = Get-Date -format "yyyy-MM-dd'T'HH:mm:ss.ssszzzz"
         $info.started = $formatedDate.remove($formatedDate.lastIndexOf(":"),1)
         $info.durationMillis = ""
-        $info.principal = "jon"
-        $info.artifactoryPrincipal = "jon"
-        $info.vcsRevision = "C36"
+        $info.principal = "$env:BUILD_QUEUEDBY"
+        $info.artifactoryPrincipal = $artifactoryUser
+        $info.vcsRevision = "$env:BUILD_SOURCEVERSION"
                 
 		#use of undocumented cmdlet Get-TaskVariable
 		$buildId = Get-TaskVariable $distributedTaskContext "build.buildId"
@@ -106,7 +106,8 @@ function GetBuildInformationFromLogsArtCli(){
 			{
 				$artifact = @{}
                                              
-				$fileUrl = $logArt.substring($logArt.IndexOf("Uploading artifact")) -replace " Uploading artifact:", ""
+				$fileUrl = $logArt.substring($logArt.IndexOf("Uploading artifact")) 
+                $fileUrl = $fileUrl -replace "Uploading artifact:", ""
 				$fileUrl = $fileUrl.split(';')[0] 
 				$file = Split-Path $fileUrl -leaf 
 				$artifact.name = $file

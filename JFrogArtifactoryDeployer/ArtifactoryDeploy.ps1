@@ -70,7 +70,8 @@ if(!$artifactoryCliPath)
 	throw ("Path to JFrog Artifactory Cli not set")
 }
 
-$pathToContent = Split-Path $contents -replace '"', ''
+$pathToContent = $contents -replace '"', ''
+$pathToContent = Split-Path $pathToContent
 
 #transform contents as running on windows machine to respect attended format for JFrog Artifactory cli (see https://github.com/JFrogDev/artifactory-cli-go)
 $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
@@ -102,12 +103,13 @@ Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs -OutVariable logsArt
 
 if($includeBuildInfoChecked)
 {
-	$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent
+	$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent -artifactoryUser $artifactoryUser
 
 	$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
 	$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
 	$apiBuild = [string]::Format("{0}api/build", $artifactoryUrl)
 	try{
+		Write-Host "Send build information to JFrog Artifactory"
 		Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
 	}
 	catch{

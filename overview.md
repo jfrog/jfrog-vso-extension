@@ -1,26 +1,21 @@
-This extension is designed integrate JFrog Artifactory in Visual Studio Online.
+JFrog Artifactory, Universal Artifact Repository, offers advanced artifact management for .NET  development on Visual Studio Team Services with NuGet, Maven, and any other package format.
 
-[Learn more](https://www.jfrog.com) about JFrog products.
+[Learn more](https://www.jfrog.com/artifactory)
 
-## Full integration with Artifactory
+## Manage your VSTS builds through Artifactory
+Setup, configure, and access Artifactory directly from VSTS.
 
-Setup an Artifactory to work with from your VSO and release other features.
-
-#### Build Information
-
-Enable navigation from VSO to Artifactory build information to maintain a full traceability between your builds and Artifact.
+#### Fully traceable builds
+Easily navigate between VSTS and Artifactory’s exhaustive build information for fully traceable builds.
 
 ![BuildInfo](images/screenshotBuildInfo.png)
 
-#### Promote
-
-Manage the promotion of your Artifacts inside Artifactory directly from VSO.
+#### Release Management
+Promote your artifacts in Artifactory, through the development pipeline. directly from VSTS
 
 ![menu](images/screenshotPromote.png)
 
-## Deploy any kind of Artifacts
-
-Using the custom task JFrog Artifactory Deployer and the JFrog CLI you can deploy any kind of Artifacts during a build process.
+## Deploy Any Artifact
+Use the custom JFrog Artifactory Deployer task with the JFrog CLI to deploy any artifact during a build process
 
 ![details](images/screenshotTask.png)
-

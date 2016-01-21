@@ -40,8 +40,8 @@ $artifactoryEndpoint = GetArtifactoryEndpoint $artifactoryEndpointName
 
 $artifactoryUrl = $($artifactoryEndpoint.Url)
 
-Write-Host "artifactoryUrl = $artifactoryUrl"
-Write-Host "buildName = $buildName"
+Write-Verbose "artifactoryUrl = $artifactoryUrl"
+Write-Verbose "buildName = $buildName"
 
 $overrideCredentialsChecked = Convert-String $overrideCredentials Boolean
 
@@ -63,13 +63,20 @@ $body.buildName = $buildName
 if($buildStatus)
 {
     $body.buildStatus = $buildStatus
+	Write-Verbose "buildStatus = $buildStatus"
 } 
 else
 {
-    $body.buildNumber = "LATEST"
+	if($env:BUILD_BUILDNUMBER)
+	{
+		 $body.buildNumber =  "$env:BUILD_BUILDNUMBER"
+	}
+	else
+    {
+		$body.buildNumber = "LATEST"
+	}
+	Write-Verbose "buildNumber = $body.buildNumber"
 }
-
-Write-Host "user = $artifactoryUser"
 
 $body.archiveType = "zip"
 
