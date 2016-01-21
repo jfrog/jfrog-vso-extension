@@ -137,6 +137,16 @@
 			"properties": {
 				"name": "JFrogArtifactoryDownloader"
 			}
+		},
+		{
+			"id": "jfrog-artifactory-downloader-build-task",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "JFrogArtifactoryPromote"
+			}
 		}
 	],
 	"files": [
@@ -175,6 +185,9 @@
 		},
 		{
 			"path": "JFrogArtifactoryDownloader"
+		},
+		{
+			"path": "JFrogArtifactoryPromote"
 		}
 	]
 }

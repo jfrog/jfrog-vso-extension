@@ -1,0 +1,126 @@
+{
+  "id": "07fc5c20-6772-11e5-abde-6401d3d12465",
+  "name": "JFrogArtifactoryPromote",
+  "friendlyName": "JFrog Artifactory Build Promotion",
+  "description": " This task helps you to promote a build into JFrog Artifactory",
+  "author": "jroquelaure",
+  "helpMarkDown": "Promote a build into Artifactory.",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "9"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "JFrogArtifactoryPromote $(message)",
+  "inputs": [
+    {
+      "name": "artifactoryEndpointName",
+      "type": "connectedService:Generic",
+      "label": "Artifactory URL",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Artifactory URL."
+    },
+    {
+      "name": "overrideCredentials",
+      "type": "boolean",
+      "label": "Override Credentials",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Override credentials given in service configuration."
+    },
+    {
+      "name": "login",
+      "type": "string",
+      "label": "User Login",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "User with permissions to deploy to the selected Artifactory repository"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "User Encrypted Password",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Password for the user entered above. Note: It is higly recommended to use an encrypted password so that your password is never passed in clear text to Artifactory."
+    },
+    {
+      "name": "buildName",
+      "type": "string",
+      "label": "Build Name.",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown" : "Build name in JFrog Artifactory. If not set the task use BUILD_DEFINITIONNAME value"
+    },
+    {
+      "name": "buildNumber",
+      "type": "string",
+      "label": "Build number",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Build number in JFrog Artiofactory. If not set the task use BUILD_BUILDNUMBER" 
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "label": "Status",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "New build status (any string)." 
+    },
+    {
+      "name": "comment",
+      "type": "string",
+      "label": "Comment",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "An optionnal comment describing the reason for the promotion." 
+    },
+    {
+      "name": "targetRepo",
+      "type": "string",
+      "label": "Target repository",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Optional repository to move or copy the build's artifacts and/or dependencies"
+    },
+    {
+      "name": "copy",
+      "type": "boolean",
+      "label": "Copy artifacts",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Whether to copy instead of move, when a target repository is specified."
+    },
+    {
+      "name": "dependencies",
+      "type": "boolean",
+      "label": "Copy/move build's dependencies",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "Whether to move/copy build's dependencies.."
+    },
+    {
+      "name": "properties",
+      "type": "string",
+      "label": "Properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "List of semicolon-separated properties to attach to the build's artifacts." 
+    }
+  ],
+  "execution": {
+    "PowerShell": {
+      "target": "$(currentDirectory)\\ArtifactoryPromote.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}

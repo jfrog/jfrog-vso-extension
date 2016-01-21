@@ -39,7 +39,7 @@
       "name": "overrideCredentials",
       "type": "boolean",
       "label": "Override Credentials",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Override credentials given in service configuration."
     },
