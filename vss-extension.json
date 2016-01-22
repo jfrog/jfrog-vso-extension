@@ -13,7 +13,7 @@
 	"icons": {
 		"default": "images/jfrog.png"	
 	},
-	"scopes": ["vso.build"],
+	"scopes": ["vso.build","vso.build_execute"],
 	"categories": [
 		"Build and release"
 	],

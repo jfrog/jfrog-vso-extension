@@ -23,32 +23,29 @@
             VSS.notifyLoadSucceeded();
         });
      </script>
-     <h1>Configure Artifactory ?</h1>
+     <h1>Configure JFrog Artifactory</h1>
        <div id="ess-extension">
-        <div class="Artifactory">
-            <div class="artifactoryEndpoint">
-                <label>Artifactory URI</label>
-                <input class="uri" />
-                <br />
-                <div class="credentials">
-                    <label>User name</label>
-                    <input class="username" />
-                    
-                    <label>API Key</label>
-                    <input type="password" class="password" />
-                </div>
-            </div>
+        <table class="Artifactory">
+            <tr class="artifactoryEndpoint">
+                <td><label>Artifactory URL</label></td>
+                <td><input class="uri" /></td>
+            </tr>
+            <tr class="credentials">
+                 <td><label>User name</label></td>
+                 <td><input class="username" /></td>
+            </tr>
+            <tr class="credentials">
+                 <td><label>Password</label></td>
+                 <td><input type="password" class="password" /></td>
+             </tr>
             
-        </div>
+            
+        </table>
 
         <br />
         <button class="saveButton">Save Settings</button>
                 
     </div>
-
-
-    <button class="reload" onclick="window.location.reload();">Reload</button>
-
 
  </body>
  </html>
