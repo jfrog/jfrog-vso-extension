@@ -40,7 +40,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                  
                  var client = buildClient.getClient();
                  client.updateDefinition(data, defId, data.project.id).then(function(result){
-                     console.log(result);
+                     $('.statusBarOK').fadeIn('slow').delay(5000).fadeOut('slow');
                  })
                    
                })
@@ -58,7 +58,6 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
             extensionSettingsService.getValue("credentials", {scopeType: "Default"}).then(function(credentials){
                         viewModel.userName(credentials ? credentials.username : "");
                         viewModel.password(credentials ? credentials.password : "");
-                         console.log("hey I loaded creds")
             });
             extensionSettingsService.getValue("setupBuildArtifactory" + viewModel.buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
@@ -66,7 +65,6 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                             viewModel.password(loadedViewModel.password);
                             viewModel.publishRepo(loadedViewModel.publishRepo)
                             viewModel.promoteRepo(loadedViewModel.promoteRepo)
-                            console.log("hey I loaded creds")
                          }
             });
         });

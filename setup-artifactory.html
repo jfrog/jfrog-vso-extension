@@ -9,20 +9,32 @@
      <meta http-Equiv="Cache-Control" Content="no-cache" />
      <meta http-Equiv="Pragma" Content="no-cache" />
      <meta http-Equiv="Expires" Content="0" />
+     
+     <style type="text/css">
+                
+         
+         input{
+             width: 250px;
+         }
+
+        
+         
+     </style>
  </head>
  <body>
 
      <script type="text/javascript">VSS.init({
          //We are using some VSTS APIs, so we will need the module loader to load them
+         explicitNotifyLoaded: true, 
          usePlatformScripts: true,
          usePlatformStyles: true
      });
      
      VSS.ready(function () {
             require(["scripts/setup-artifactory"], function (extensionData) { });
-            VSS.notifyLoadSucceeded();
         });
      </script>
+     <div class="statusBarOK" style="display:none;background-color:green" ><span>Successfully saved</span></div>
      <h1>Configure JFrog Artifactory</h1>
        <div id="ess-extension">
         <table class="Artifactory">

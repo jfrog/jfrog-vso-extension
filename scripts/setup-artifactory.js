@@ -2,10 +2,10 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q"], function (
 	
 	  $(function () {
         $('.saveButton').on('click', function (eventObject) {
-            saveSettings("Default", ".artifactoryEndpoint");
+            saveSettings("Default", ".Artifactory");
         });
         
-		getSettings("Default", ".artifactoryEndpoint");
+		getSettings("Default", ".Artifactory");
         
 	  });
 	

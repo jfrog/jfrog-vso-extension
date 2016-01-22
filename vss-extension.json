@@ -57,7 +57,7 @@
 				"ms.vss-build-web.build-hub-group"
 			],
 			"properties": {
-				"name": "SetupArtifactory",
+				"name": "Setup JFrog Artifactory",
 				"order": 99,
 				"uri": "setup-artifactory.html"
 			}
