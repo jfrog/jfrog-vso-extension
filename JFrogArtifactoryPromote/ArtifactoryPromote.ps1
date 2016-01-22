@@ -112,6 +112,9 @@ if(!$buildNumber)
 	$buildNumber = "$env:BUILD_BUILDNUMBER"
 }
 
+Write-Verbose "build name = $buildName"
+Write-Verbose "build number = $buildNumber"
+
 $jsonBody = ConvertTo-JSON $body
 
 $secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force

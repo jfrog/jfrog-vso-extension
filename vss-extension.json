@@ -13,7 +13,7 @@
 	"icons": {
 		"default": "images/jfrog.png"	
 	},
-	"scopes": ["vso.build","vso.build_execute"],
+	"scopes": ["vso.build"],
 	"categories": [
 		"Build and release"
 	],
@@ -139,7 +139,7 @@
 			}
 		},
 		{
-			"id": "jfrog-artifactory-downloader-build-task",
+			"id": "jfrog-artifactory-promote-build-task",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"

@@ -84,7 +84,7 @@ function GetBuildInformationFromLogsArtCli(){
         
         
 		$info.Type = "Generic"
-        $formatedDate = Get-Date -format "yyyy-MM-dd'T'HH:mm:ss.ssszzzz"
+        $formatedDate = Get-Date -format "yyyy-MM-dd'T'HH:mm:ss.fffzzzz"
         $info.started = $formatedDate.remove($formatedDate.lastIndexOf(":"),1)
         $info.durationMillis = ""
         $info.principal = "$env:BUILD_QUEUEDBY"
