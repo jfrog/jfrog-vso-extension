@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "10",
-    "Patch": "24"
+    "Patch": "25"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDeployer $(message)",
@@ -54,7 +54,7 @@
     {
       "name": "password",
       "type": "string",
-      "label": "User Api Key",
+      "label": "User Encrypted Password",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Password for the user entered above. Note: It is higly recommended to use an encrypted password so that your password is never passed in clear text to Artifactory."

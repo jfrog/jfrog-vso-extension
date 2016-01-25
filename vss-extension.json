@@ -4,7 +4,7 @@
 	"version": "0.1.4",
 	"name": "JFrog Artifactory Integration",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
-	"publisher": "jfrog-soleng",
+	"publisher": "JFrog",
 	"targets": [
 		{
 			"id": "Microsoft.VisualStudio.Services"
