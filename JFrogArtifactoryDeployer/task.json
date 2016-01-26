@@ -3,7 +3,7 @@
   "name": "JFrogArtifactoryDeployer",
   "friendlyName": "JFrog Artifactory Deployer",
   "description": " This task helps you to deploy generic build result artifacts to Artifactory",
-  "author": "jroquelaure",
+  "author": "jfrog",
   "helpMarkDown": "Upload artifacts to JFrog Artifactory using JFrog Artifactory cli.",
   "category": "Utility",
   "visibility": [
@@ -13,8 +13,8 @@
   "demands": [],
   "version": {
     "Major": "1",
-    "Minor": "10",
-    "Patch": "25"
+    "Minor": "2",
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDeployer $(message)",
