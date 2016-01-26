@@ -84,7 +84,7 @@ $jsonBody = ConvertTo-JSON $body
 
 $secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
-$api = [string]::Format("{0}api/archive/buildArtifacts", $artifactoryUrl)
+$api = [string]::Format("{0}/api/archive/buildArtifacts", $artifactoryUrl)
 
 $Destination = "$env:temp\artifacts.zip"
 

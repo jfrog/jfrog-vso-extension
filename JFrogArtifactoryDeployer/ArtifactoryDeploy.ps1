@@ -107,7 +107,7 @@ if($includeBuildInfoChecked)
 
 	$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
 	$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
-	$apiBuild = [string]::Format("{0}api/build", $artifactoryUrl)
+	$apiBuild = [string]::Format("{0}/api/build", $artifactoryUrl)
 	try{
 		Write-Host "Send build information to JFrog Artifactory"
 		Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo

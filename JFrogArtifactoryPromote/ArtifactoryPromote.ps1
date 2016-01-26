@@ -119,7 +119,7 @@ $jsonBody = ConvertTo-JSON $body
 
 $secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
-$apiBuild = [string]::Format("{0}api/build/promote/{1}/{2}", $artifactoryUrl, $buildName, $buildNumber)
+$apiBuild = [string]::Format("{0}/api/build/promote/{1}/{2}", $artifactoryUrl, $buildName, $buildNumber)
 try{
 	Write-Host "Send build information to JFrog Artifactory"
 	Invoke-RestMethod -Uri $apiBuild -Method POST -Credential $cred -ContentType "application/json" -Body $jsonBody
