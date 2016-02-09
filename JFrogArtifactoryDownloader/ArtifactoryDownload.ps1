@@ -90,7 +90,6 @@ $Destination = "$env:temp\artifacts.zip"
 
 try{
 		Invoke-RestMethod -Uri $api -Method Post -Credential $cred -ContentType "application/json" -Body $jsonBody -OutFile $Destination
-        # Unlock-File $Destination
 		if(Test-Path $Destination)
 		{
 			Write-Verbose "Archive downloaded at $Destination"

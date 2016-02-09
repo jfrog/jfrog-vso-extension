@@ -33,9 +33,7 @@ function Get-FileHash {
                 $object = Add-Member -InputObject $Object -MemberType NoteProperty -Name $Type -Value $Hash -PassThru
             }
             $object.pstypenames.insert(0,'System.IO.FileInfo.Hash')
-            #Output an object with the hash, algorithm and path
-            # Write-Host $object
-
+           
             #Close the stream
             $stream.Close()
             
