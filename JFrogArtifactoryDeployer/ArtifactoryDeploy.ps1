@@ -68,7 +68,7 @@ else
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
     Write-Host "Downloading the JFrog cli from Bintray"
-	$source = "https://api.bintray.com/content/jfrog/artifactory-cli-go/`$latest/windows_amd64/art.exe;bt_package=artifactory-cli-windows-amd64"
+	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/windows_amd64/art.exe;bt_package=jfrog-cli-windows-amd64"
 	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\art.exe"
 	Invoke-WebRequest $source -OutFile $artifactoryCliPath
 }
