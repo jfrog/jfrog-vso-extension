@@ -68,8 +68,8 @@ else
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
     Write-Host "Downloading the JFrog cli from Bintray"
-	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/windows_amd64/art.exe;bt_package=jfrog-cli-windows-amd64"
-	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\art.exe"
+	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/windows_amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
+	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\jfrog.exe"
 	Invoke-WebRequest $source -OutFile $artifactoryCliPath
 }
 
@@ -80,7 +80,7 @@ $pathToContent = Split-Path $pathToContent
 #transform contents as running on windows machine to respect attended format for JFrog Artifactory cli (see https://github.com/JFrogDev/artifactory-cli-go)
 $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
-$cliArgs = "upload $contents $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
+$cliArgs = "rt upload $contents $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
 
 $includeBuildInfoChecked = Convert-String $includeBuildInfo Boolean
 

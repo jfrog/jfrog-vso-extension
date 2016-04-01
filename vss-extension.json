@@ -1,7 +1,7 @@
 {
 	"manifestversion": 1,
 	"id": "jfrog-artifactory",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"name": "JFrog Artifactory Integration",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
 	"publisher": "JFrog",
@@ -22,11 +22,6 @@
 		"Artifactory",
 		"Artifact",
 		"Repository"
-	],
-	"screenshots": [
-		{
-			"path": "images/screenshotBuildInfo.png"
-		}
 	],
 	"content":	{
 		"details": {

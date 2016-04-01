@@ -14,7 +14,7 @@
   "version": {
     "Major": "2",
     "Minor": "0",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDeployer $(message)",
@@ -65,7 +65,7 @@
 	"label": "Path to JFrog Artifactory Cli exe",
 	"defaultValue": "",
 	"required": "false",
-	"helpMarkDown" : "Path to the Jfrog Artifactory Cli executable. The task will download latest version if empty. [More Information](https://bintray.com/jfrog/artifactory-cli-go/artifactory-cli-windows-amd64/view)"
+	"helpMarkDown" : "Path to the Jfrog Artifactory Cli executable. The task will download latest version if empty. [More Information](https://www.jfrog.com/confluence/display/RTF/JFrog+CLI)"
     },
     {
       "name": "contents",
