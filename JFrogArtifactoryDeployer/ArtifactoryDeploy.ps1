@@ -68,7 +68,7 @@ else
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
     Write-Host "Downloading the JFrog cli from Bintray"
-	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/windows_amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
+	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
 	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\jfrog.exe"
 	Invoke-WebRequest $source -OutFile $artifactoryCliPath
 }
@@ -80,7 +80,8 @@ $pathToContent = Split-Path $pathToContent
 #transform contents as running on windows machine to respect attended format for JFrog Artifactory cli (see https://github.com/JFrogDev/artifactory-cli-go)
 $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
-$cliArgs = "rt upload $contents $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
+$env:JFROG_CLI_OFFER_CONFIG='false'
+$cliArgs = "rt upload '$contents' $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
 
 $includeBuildInfoChecked = Convert-String $includeBuildInfo Boolean
 
@@ -100,31 +101,39 @@ if($includeBuildInfoChecked)
 
 if($properties)
 {
-	$cliArgs = ($cliArgs + " " + "--props=$properties");
+	$cliArgs = ($cliArgs + " " + "--props='$properties'");
 }
 
-Invoke-Tool -Path $artifactoryCliPath -Arguments  $cliArgs -OutVariable logsArt
+Invoke-Expression "& '$artifactoryCliPath' $cliArgs" -OutVariable logsArt
 
-if($includeBuildInfoChecked)
+if($LASTEXITCODE -ne 0)
 {
-	$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent -artifactoryUser $artifactoryUser
-
-	$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
-	$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
-	$apiBuild = [string]::Format("{0}/api/build", $artifactoryUrl)
-	try{
-		Write-Host "Send build information to JFrog Artifactory"
-		Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
-	}
-	catch{
-		Write-Verbose $_.Exception.ToString()
-		$response = $_.Exception.Response
-		$responseStream = $response.GetResponseStream()
-		$streamReader = New-Object System.IO.StreamReader($responseStream)
-		$streamReader.BaseStream.Position = 0
-		$streamReader.DiscardBufferedData()
-		$responseBody = $streamReader.ReadToEnd()
-		$streamReader.Close()
-		Write-Warning "Cannot update build information - $responseBody" 
+	Write-Error "Deployment to Artifactory failed"
+	Exit 1
+}
+else
+{
+	if($includeBuildInfoChecked)
+	{
+		$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent -artifactoryUser $artifactoryUser
+	
+		$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
+		$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
+		$apiBuild = [string]::Format("{0}/api/build", $artifactoryUrl)
+		try{
+			Write-Host "Send build information to JFrog Artifactory"
+			Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
+		}
+		catch{
+			Write-Verbose $_.Exception.ToString()
+			$response = $_.Exception.Response
+			$responseStream = $response.GetResponseStream()
+			$streamReader = New-Object System.IO.StreamReader($responseStream)
+			$streamReader.BaseStream.Position = 0
+			$streamReader.DiscardBufferedData()
+			$responseBody = $streamReader.ReadToEnd()
+			$streamReader.Close()
+			Write-Warning "Cannot update build information - $responseBody" 
+		}
 	}
 }
