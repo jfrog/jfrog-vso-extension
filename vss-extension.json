@@ -2,7 +2,7 @@
 	"manifestversion": 1,
 	"public": true,
 	"id": "jfrog-artifactory",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"name": "JFrog Artifactory Integration",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
 	"publisher": "JFrog",
@@ -50,7 +50,8 @@
 			"type": "ms.vss-web.hub",
 			"description": "Add a new hub to build group to setup your JFrog Artifactory endpoint.",
 			"targets": [
-				"ms.vss-build-web.build-hub-group"
+				"ms.vss-build-web.build-hub-group",
+			    "ms.vss-build-web.build-release-hub-group"
 			],
 			"properties": {
 				"name": "Setup JFrog Artifactory",

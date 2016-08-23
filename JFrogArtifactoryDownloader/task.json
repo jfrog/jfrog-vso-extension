@@ -1,5 +1,5 @@
 {
-  "id": "07fc5c20-6772-11e5-abde-6401d3d00465",
+  "id": "07fc5c20-6772-11e5-abde-6411d3d00465",
   "name": "JFrogArtifactoryDownloader",
   "friendlyName": "JFrog Artifactory Downloader",
   "description": " This task helps you to download artifacts published to Artifactory during a build",
@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "1",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDownloader $(message)",
