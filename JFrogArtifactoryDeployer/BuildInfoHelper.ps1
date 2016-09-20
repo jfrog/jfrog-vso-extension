@@ -84,7 +84,7 @@ function GetBuildInformationFromLogsArtCli(){
 		$info.Type = "Generic"
         $formatedDate = Get-Date -format "yyyy-MM-dd'T'HH:mm:ss.fffzzzz"
         $info.started = $formatedDate.remove($formatedDate.lastIndexOf(":"),1)
-        $info.durationMillis = ""
+        $info.durationMillis = "0"
         $info.principal = "$env:BUILD_QUEUEDBY"
         $info.artifactoryPrincipal = $artifactoryUser
         $info.vcsRevision = "$env:BUILD_SOURCEVERSION"
@@ -130,4 +130,11 @@ function GetBuildInformationFromLogsArtCli(){
 		Write-Verbose $result
 		
 		Return $result
+}
+
+function Expand-String(){
+    [CmdletBinding()]
+    param([string]$value)
+
+	return [System.Environment]::ExpandEnvironmentVariables($value)
 }

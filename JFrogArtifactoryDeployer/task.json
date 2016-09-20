@@ -76,6 +76,14 @@
       "helpMarkDown" : "Path to the artifacts to be uploaded.The path can include one or multiple artifacts by using the * wildcard.TFS variables can also be used."
     },
     {
+      "name": "regexpInPathToArtifacts",
+      "type": "boolean",
+      "label": "Is a regular expression used in 'Path to the Artifacts'?",
+      "defaultValue": "false",
+      "required": true,
+      "helpMarkDown": "You can specify multiple artifacts in the 'Path to the Artifacts' by using wildcards or a regular expression.  If you're using a regular expression, this box should be checked."
+    },
+    {
       "name": "properties",
       "type": "string",
       "label": "Properties",
