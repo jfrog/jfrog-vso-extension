@@ -1,5 +1,5 @@
 {
-  "id": "07fc5c20-6772-11e5-abde-6411d3d12465",
+  "id": "07fc5c20-6772-11e5-abde-6401d3d12465",
   "name": "JFrogArtifactoryPromote",
   "friendlyName": "JFrog Artifactory Build Promotion",
   "description": " This task helps you to promote a build into JFrog Artifactory",

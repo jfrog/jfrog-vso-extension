@@ -1,5 +1,5 @@
 {
-  "id": "07fc5c20-6772-11e5-abde-6411d3d00465",
+  "id": "07fc5c20-6772-11e5-abde-6401d3d00465",
   "name": "JFrogArtifactoryDownloader",
   "friendlyName": "JFrog Artifactory Downloader",
   "description": " This task helps you to download artifacts published to Artifactory during a build",
