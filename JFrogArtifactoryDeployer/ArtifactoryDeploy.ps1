@@ -76,7 +76,7 @@ Write-Verbose "contents = $contents (after expansion)"
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
     Write-Host "Downloading the JFrog cli from Bintray"
-	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
+	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/1.4.2/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
 	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\jfrog.exe"
 	Invoke-WebRequest $source -OutFile $artifactoryCliPath
 }
@@ -91,7 +91,7 @@ $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 $regexpInPathToArtifactsChecked = Convert-String $regexpInPathToArtifacts Boolean
 
 $env:JFROG_CLI_OFFER_CONFIG='false'
-$cliArgs = "rt upload '$contents' $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
+$cliArgs = "rt upload '$contents' '$targetRepo' --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
 
 if($regexpInPathToArtifactsChecked)
 {

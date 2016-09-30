@@ -66,7 +66,7 @@ function GetBuildInformationFromLogsArtCli(){
 		}
         
         $info.properties = $properties
-		$info.version = "1.0.1"
+		$info.version = "1.1.0"
 		$info.name = "$env:BUILD_DEFINITIONNAME"
 		$info.number = "$env:BUILD_BUILDNUMBER"
         
