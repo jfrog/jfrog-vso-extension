@@ -3,6 +3,7 @@ param (
     [string]$targetRepo,
     [string]$artifactoryCliPath,
     [string]$contents,
+    [string]$regexpInPathToArtifacts,
     [string]$properties,
     [string]$overrideCredentials,
     [string]$login,
@@ -31,6 +32,7 @@ Write-Verbose "artifactoryUrl = $artifactoryUrl"
 Write-Verbose "targetRepo = $targetRepo"
 Write-Verbose "artifactoryCliPath = $artifactoryCliPath"
 Write-Verbose "contents = $contents"
+Write-Verbose "regexpInPathToArtifacts = $regexpInPathToArtifacts"
 Write-Verbose "properties = $properties"
 
 Write-Host "Import modules"
@@ -64,11 +66,17 @@ else
 	$artifactoryPwd = $($artifactoryEndpoint.Authorization.Parameters.Password)
 }
 
+#expand environment variables in target repo and content
+$targetRepo = Expand-String $targetRepo
+Write-Verbose "targetRepo = $targetRepo (after expansion)"
+$contents = Expand-String $contents
+Write-Verbose "contents = $contents (after expansion)"
+
 #get artifactory cli path and configure it
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
     Write-Host "Downloading the JFrog cli from Bintray"
-	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/`$latest/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
+	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/1.4.2/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
 	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\jfrog.exe"
 	Invoke-WebRequest $source -OutFile $artifactoryCliPath
 }
@@ -80,8 +88,15 @@ $pathToContent = Split-Path $pathToContent
 #transform contents as running on windows machine to respect attended format for JFrog Artifactory cli (see https://github.com/JFrogDev/artifactory-cli-go)
 $contents = $contents -replace "\\+", "\" -replace "\\", "\\"
 
+$regexpInPathToArtifactsChecked = Convert-String $regexpInPathToArtifacts Boolean
+
 $env:JFROG_CLI_OFFER_CONFIG='false'
-$cliArgs = "rt upload '$contents' $targetRepo --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
+$cliArgs = "rt upload '$contents' '$targetRepo' --url=$artifactoryUrl --user=$artifactoryUser --password=$artifactoryPwd"
+
+if($regexpInPathToArtifactsChecked)
+{
+	$cliArgs = ($cliArgs + " " + "--regexp=true");
+}
 
 $includeBuildInfoChecked = Convert-String $includeBuildInfo Boolean
 
@@ -104,6 +119,7 @@ if($properties)
 	$cliArgs = ($cliArgs + " " + "--props='$properties'");
 }
 
+Write-Host "running '$artifactoryCliPath' $cliArgs"
 Invoke-Expression "& '$artifactoryCliPath' $cliArgs" -OutVariable logsArt
 
 if($LASTEXITCODE -ne 0)
@@ -117,12 +133,11 @@ else
 	{
 		$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent -artifactoryUser $artifactoryUser
 	
-		$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
-		$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
+		$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser,$artifactoryPwd)))
 		$apiBuild = [string]::Format("{0}/api/build", $artifactoryUrl)
 		try{
 			Write-Host "Send build information to JFrog Artifactory"
-			Invoke-RestMethod -Uri $apiBuild -Method Put -Credential $cred -ContentType "application/json" -Body $buildInfo
+			Invoke-RestMethod -Uri $apiBuild -Method Put -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $buildInfo
 		}
 		catch{
 			Write-Verbose $_.Exception.ToString()
