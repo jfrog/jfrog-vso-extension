@@ -76,7 +76,7 @@ Write-Verbose "contents = $contents (after expansion)"
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
     Write-Host "Downloading the JFrog cli from Bintray"
-	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/1.4.2/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
+	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/1.4.1/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
 	$artifactoryCliPath = "$env:AGENT_BUILDDIRECTORY" + "\jfrog.exe"
 	Invoke-WebRequest $source -OutFile $artifactoryCliPath
 }
@@ -132,12 +132,12 @@ else
 	if($includeBuildInfoChecked)
 	{
 		$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent -artifactoryUser $artifactoryUser
-	
+		
 		$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser,$artifactoryPwd)))
 		$apiBuild = [string]::Format("{0}/api/build", $artifactoryUrl)
 		try{
 			Write-Host "Send build information to JFrog Artifactory"
-			Invoke-RestMethod -Uri $apiBuild -Method Put -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $buildInfo
+			Invoke-RestMethod -Uri $apiBuild -Method Put -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body  ([System.Text.Encoding]::UTF8.GetBytes($buildInfo))
 		}
 		catch{
 			Write-Verbose $_.Exception.ToString()
