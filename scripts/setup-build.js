@@ -25,26 +25,24 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
               var defId = self.buildDefId;
               var webcontext = VSS.getWebContext();
               var apiUrl = webcontext.collection.uri + webcontext.project.name +"/_apis/build/definitions/" + defId + "?api-version=2.0";
-               
-               $.getJSON(apiUrl, function(data ,status){
-
-                 if(!data.variables)
-                 {
-                     data.variables = {};
-                 }
-                 data = addVariablesToBuildDefinition(data,"PublishRepository", self.publishRepo(), false);
-                 data = addVariablesToBuildDefinition(data,"PromoteRepository", self.promoteRepo(), false);
-                 data = addVariablesToBuildDefinition(data,"ArtifactoryUsername", self.userName(), false);
-                 data = addVariablesToBuildDefinition(data,"ArtifactoryPassword", self.password(), false);
-                 data = addVariablesToBuildDefinition(data,"ArtifactoryUrl", self.artifactoryUri(), false);
+              var client = buildClient.getClient();
+              
+              var definition =client.getDefinition(defId, webcontext.project.name).then(function(definition) {
+                 definition = addVariablesToBuildDefinition(definition,"PublishRepository", self.publishRepo(), false);
+                 definition = addVariablesToBuildDefinition(definition,"PromoteRepository", self.promoteRepo(), false);
+                 definition = addVariablesToBuildDefinition(definition,"ArtifactoryUsername", self.userName(), false);
+                 definition = addVariablesToBuildDefinition(definition,"ArtifactoryPassword", self.password(), false);
+                 definition = addVariablesToBuildDefinition(definition,"ArtifactoryUrl", self.artifactoryUri(), false);
                  
                  var client = buildClient.getClient();
-                 client.updateDefinition(data, defId, data.project.id).then(function(result){
+                 client.updateDefinition(definition, defId, definition.project.id).then(function(result){
                      $('.statusBarOK').fadeIn('slow').delay(5000).fadeOut('slow');
                  })
-                   
-               })
-
+                    
+                }, function(reason) {
+                   console.log("reason");
+                });
+               
             };
          }
 	  });
