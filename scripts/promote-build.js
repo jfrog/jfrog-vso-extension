@@ -38,7 +38,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 			self.useCopy = ko.observable(false);
 			self.buildDefId = buildDefId;
 			self.buildDefName = buildDefName;
-			self.properties = ko.observable('ex : "components":["c1","c3","c14"], "release-name": ["fb3-ga"]');
+			self.properties = ko.observable("");
             self.status = ko.observable(true);
                 
             self.statusMessage = ko.computed(function(){
@@ -119,7 +119,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                viewModel.artifactoryUri(artifactoryUriValue);
             });
            
-            extensionSettingsService.getValue("setupBuildArtifactory" + buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
+            extensionSettingsService.getDocument("setupBuildArtifactory", buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
                             viewModel.userName(loadedViewModel.username);
                             viewModel.password(loadedViewModel.password);

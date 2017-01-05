@@ -57,12 +57,13 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
                         viewModel.userName(credentials ? credentials.username : "");
                         viewModel.password(credentials ? credentials.password : "");
             });
-            extensionSettingsService.getValue("setupBuildArtifactory" + viewModel.buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
+            extensionSettingsService.getDocument("setupBuildArtifactory", viewModel.buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
                             viewModel.userName(loadedViewModel.username);
                             viewModel.password(loadedViewModel.password);
-                            viewModel.publishRepo(loadedViewModel.publishRepo)
-                            viewModel.promoteRepo(loadedViewModel.promoteRepo)
+                            viewModel.publishRepo(loadedViewModel.publishRepo);
+                            viewModel.promoteRepo(loadedViewModel.promoteRepo);
+                            viewModel.overrideCreds(loadedViewModel.overrideCreds);
                          }
             });
         });
@@ -81,14 +82,16 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
     function saveSettings(viewModel) {
                
         var saveViewModel = {
+            id: viewModel.buildDefId,
             username: viewModel.userName(),
             password: viewModel.password(),
             publishRepo: viewModel.publishRepo(),
             promoteRepo: viewModel.promoteRepo(),
-            artifactoryUrl: viewModel.artifactoryUri()
+            artifactoryUrl: viewModel.artifactoryUri(),
+            overrideCreds: viewModel.overrideCreds()
         };
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-               extensionSettingsService.setValue("setupBuildArtifactory" + viewModel.buildDefId, saveViewModel, {scopeType: "Default"}).then(function (value) {
+               extensionSettingsService.setDocument("setupBuildArtifactory", saveViewModel, {scopeType: "Default"}).then(function (value) {
                    console.log(value);
             });
             

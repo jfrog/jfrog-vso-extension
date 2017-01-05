@@ -15,7 +15,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 				if(buildId > 0)
 				{
 							VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-							extensionSettingsService.getValue("setupBuildArtifactory" + build.definition.id, {scopeType: "Default"}).then(function(loadedViewModel){
+							extensionSettingsService.getDocument("setupBuildArtifactory", build.definition.id, {scopeType: "Default"}).then(function(loadedViewModel){
 										if(loadedViewModel){
 											$.ajax({
 											cache: false,
@@ -158,7 +158,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 	 function getArtifactoryUrl(buildDefId) {
             VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
            
-            extensionSettingsService.getValue("setupBuildArtifactory" + buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
+            extensionSettingsService.getDocumment("setupBuildArtifactory", buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
                             return loadedViewModel.artifactoryUri;
                          }
