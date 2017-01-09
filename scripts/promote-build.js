@@ -112,19 +112,17 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 	  });
         
     function getSettings(viewModel, buildDefId) {
-        
 		console.log("getSettings");
         VSS.getService("ms.vss-web.data-service").then(function (extensionSettingsService) {
-               extensionSettingsService.getValue("artifactoryUri", {scopeType: "Default"}).then(function(artifactoryUriValue){
-               viewModel.artifactoryUri(artifactoryUriValue);
-            });
-           
             extensionSettingsService.getDocument("setupBuildArtifactory", buildDefId, {scopeType: "Default"}).then(function(loadedViewModel){
                         if(loadedViewModel){
                             viewModel.userName(loadedViewModel.username);
                             viewModel.password(loadedViewModel.password);
                             viewModel.promoteRepository(loadedViewModel.promoteRepo)
+                            viewModel.artifactoryUri(loadedViewModel.artifactoryUrl);
                          }
+            }, function(reason) {
+                console.log("Failed to load defined values for the build. Check the 'Setup JFrog Artifactory' for this build")
             });
         });
     }
