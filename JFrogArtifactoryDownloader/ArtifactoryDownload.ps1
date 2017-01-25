@@ -59,9 +59,13 @@ else
 
 if ($artifactoryUser) {
         Write-Host "artifactoryUser = $artifactoryUser"
+} else {
+        Write-Host "artifactoryUser = (null)"
 }
 if ($artifactoryPwd) {
         Write-Host "artifactoryPwd = (masked)"
+} else {
+        Write-Host "artifactoryPwd = (null)"
 }
 
 $body = @{}
@@ -82,7 +86,7 @@ else
     {
 		$body.buildNumber = "LATEST"
 	}
-	Write-Host "buildNumber = $body.buildNumber"
+	Write-Host "buildNumber = $($body.buildNumber)"
 }
 
 $body.archiveType = "zip"
