@@ -40,8 +40,8 @@ $artifactoryEndpoint = GetArtifactoryEndpoint $artifactoryEndpointName
 
 $artifactoryUrl = $($artifactoryEndpoint.Url)
 
-Write-Verbose "artifactoryUrl = $artifactoryUrl"
-Write-Verbose "buildName = $buildName"
+Write-Host "artifactoryUrl = $artifactoryUrl"
+Write-Host "buildName = $buildName"
 
 $overrideCredentialsChecked = Convert-String $overrideCredentials Boolean
 
@@ -57,13 +57,24 @@ else
 	$artifactoryPwd = $($artifactoryEndpoint.Authorization.Parameters.Password)
 }
 
+if ($artifactoryUser) {
+        Write-Host "artifactoryUser = $artifactoryUser"
+} else {
+        Write-Host "artifactoryUser = (null)"
+}
+if ($artifactoryPwd) {
+        Write-Host "artifactoryPwd = (masked)"
+} else {
+        Write-Host "artifactoryPwd = (null)"
+}
+
 $body = @{}
 
 $body.buildName = $buildName
 if($buildStatus)
 {
     $body.buildStatus = $buildStatus
-	Write-Verbose "buildStatus = $buildStatus"
+    Write-Host "buildStatus = $buildStatus"
 } 
 else
 {
@@ -75,28 +86,28 @@ else
     {
 		$body.buildNumber = "LATEST"
 	}
-	Write-Verbose "buildNumber = $body.buildNumber"
+	Write-Host "buildNumber = $($body.buildNumber)"
 }
 
 $body.archiveType = "zip"
 
 $jsonBody = ConvertTo-JSON $body
 
-$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
-$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
 $api = [string]::Format("{0}/api/archive/buildArtifacts", $artifactoryUrl)
+
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser, $artifactoryPwd)))
 
 $Destination = "$env:temp\artifacts.zip"
 
 try{
-		Invoke-RestMethod -Uri $api -Method Post -Credential $cred -ContentType "application/json" -Body $jsonBody -OutFile $Destination
+		Invoke-RestMethod -Uri $api -Method Post -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $jsonBody -OutFile $Destination
 		if(Test-Path $Destination)
 		{
-			Write-Verbose "Archive downloaded at $Destination"
+			Write-Host "Archive downloaded at $Destination"
 		}
 		
 	}
-	catch{
+	catch {
 		Write-Verbose $_.Exception.ToString()
 		$response = $_.Exception.Response
 		$responseStream = $response.GetResponseStream()
@@ -105,5 +116,5 @@ try{
 		$streamReader.DiscardBufferedData()
 		$responseBody = $streamReader.ReadToEnd()
 		$streamReader.Close()
-		Write-Warning "Cannot get artifacts archive- $responseBody" 
+		Write-Error -Message "Cannot get artifacts archive- $responseBody" -Exception $_.Exception
 	}
