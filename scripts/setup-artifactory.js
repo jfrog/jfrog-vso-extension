@@ -58,6 +58,8 @@ function getSettings(scope, selector) {
                         saveSettings(scope, selector);
                     });
                 }
+            }, function (reason_old) {
+                VSS.notifyLoadSucceeded();
             });
         });
     });

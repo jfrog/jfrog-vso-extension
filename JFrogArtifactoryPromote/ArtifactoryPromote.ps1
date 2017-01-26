@@ -30,10 +30,10 @@ function GetArtifactoryEndpoint
 }
 
 Write-Host 'Entering JFrog Artifactory Promote task'
-Write-Verbose "artifactoryUrl = $artifactoryUrl"
-Write-Verbose "properties = $properties"
-Write-Verbose "build status = $status"
-Write-Verbose "comment = $comment"
+Write-Host "artifactoryUrl = $artifactoryUrl"
+Write-Host "properties = $properties"
+Write-Host "build status = $status"
+Write-Host "comment = $comment"
 
 Write-Host "Import modules"
 # Import the Task.Common dll that has all the cmdlets we need for Build
@@ -112,17 +112,17 @@ if(!$buildNumber)
 	$buildNumber = "$env:BUILD_BUILDNUMBER"
 }
 
-Write-Verbose "build name = $buildName"
-Write-Verbose "build number = $buildNumber"
+Write-Host "build name = $buildName"
+Write-Host "build number = $($body.buildNumber)"
 
 $jsonBody = ConvertTo-JSON $body
 
-$secpwd = ConvertTo-SecureString $artifactoryPwd -AsPlainText -Force
-$cred = New-Object System.Management.Automation.PSCredential ($artifactoryUser, $secpwd)
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser, $artifactoryPwd)))
+
 $apiBuild = [string]::Format("{0}/api/build/promote/{1}/{2}", $artifactoryUrl, $buildName, $buildNumber)
 try{
 	Write-Host "Send build information to JFrog Artifactory"
-	Invoke-RestMethod -Uri $apiBuild -Method POST -Credential $cred -ContentType "application/json" -Body $jsonBody
+	Invoke-RestMethod -Uri $apiBuild -Method POST -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $jsonBody
 }
 catch{
 	Write-Verbose $_.Exception.ToString()
@@ -133,5 +133,5 @@ catch{
 	$streamReader.DiscardBufferedData()
 	$responseBody = $streamReader.ReadToEnd()
 	$streamReader.Close()
-	Write-Warning "Cannot update build information - $responseBody" 
+	Write-Error "Promotion failed - $responseBody" 
 }

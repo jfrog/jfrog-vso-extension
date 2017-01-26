@@ -40,7 +40,7 @@ define(["require", "exports", "VSS/SDK/Services/ExtensionData", "q", "knockout",
 				})
 
 			}, function (reason) {
-				console.log("reason");
+				console.log(reason);
 			});
 
 		};
