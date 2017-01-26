@@ -44,8 +44,8 @@ function getSettings(scope, selector) {
                 $(selector + " .uri").val(artifactoryConfig.artifactoryUri ? artifactoryConfig.artifactoryUri : "");
                 $(selector + " .username").val(artifactoryConfig.credentials ? artifactoryConfig.credentials.username : "");
                 $(selector + " .password").val(artifactoryConfig.credentials ? artifactoryConfig.credentials.password : "");
-                VSS.notifyLoadSucceeded();
             }
+            VSS.notifyLoadSucceeded();
         }, function (reason) {
             //Old data format as value key => migration as document
             extensionSettingsService.getValue("artifactoryUri", { scopeType: scope }).then(function (artifactoryUri) {
@@ -54,10 +54,10 @@ function getSettings(scope, selector) {
                     extensionSettingsService.getValue("credentials", { scopeType: scope }).then(function (credentials) {
                         $(selector + " .username").val(credentials ? credentials.username : "");
                         $(selector + " .password").val(credentials ? credentials.password : "");
-                        VSS.notifyLoadSucceeded();
                         saveSettings(scope, selector);
                     });
                 }
+                VSS.notifyLoadSucceeded();
             }, function (reason_old) {
                 VSS.notifyLoadSucceeded();
             });
