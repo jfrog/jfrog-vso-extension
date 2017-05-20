@@ -60,6 +60,14 @@
       "helpMarkDown" : "Build name in JFrog Artifactory."
     },
     {
+      "name": "BuildNumberInput",
+      "type": "string",
+      "label": "Build Number.",
+      "defaultValue": "LATEST",
+      "required": true,
+      "helpMarkDown" : "Build number in JFrog Artifactory."
+    },
+    {
       "name": "buildStatus",
       "type": "string",
       "label": "Build Status",
