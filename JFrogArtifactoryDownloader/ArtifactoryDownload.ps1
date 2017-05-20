@@ -1,6 +1,7 @@
 param (
     [string]$artifactoryEndpointName,
     [string]$buildName,
+    [string]$BuildNumberInput,
     [string]$buildStatus,
     [string]$overrideCredentials,
     [string]$login,
