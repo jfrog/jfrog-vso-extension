@@ -78,9 +78,9 @@ if($buildStatus)
 } 
 else
 {
-	if($env:BUILD_BUILDNUMBER)
+	if($BuildNumberInput -ne "")
 	{
-		 $body.buildNumber =  "$env:BUILD_BUILDNUMBER"
+		 $body.buildNumber =  "$BuildNumberInput"
 	}
 	else
     {
