@@ -76,18 +76,16 @@ if($buildStatus)
     $body.buildStatus = $buildStatus
     Write-Host "buildStatus = $buildStatus"
 } 
-else
+
+if($BuildNumberInput -ne "")
 {
-	if($BuildNumberInput -ne "")
-	{
-		 $body.buildNumber =  $BuildNumberInput
-	}
-	else
-    {
-		$body.buildNumber = "LATEST"
-	}
-	Write-Host "buildNumber = $($body.buildNumber)"
+	$body.buildNumber =  $BuildNumberInput
 }
+	else
+{
+		$body.buildNumber = "LATEST"
+}
+	Write-Host "buildNumber = $($body.buildNumber)"
 
 $body.archiveType = "zip"
 
