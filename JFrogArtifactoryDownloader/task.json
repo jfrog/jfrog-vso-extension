@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "1",
-    "Patch": "2"
+    "Patch": "8"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDownloader $(message)",
