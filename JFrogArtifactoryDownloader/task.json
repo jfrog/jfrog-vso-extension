@@ -62,8 +62,8 @@
     {
       "name": "BuildNumberInput",
       "type": "string",
-      "label": "Build Number.",
-      "defaultValue": "LATEST",
+      "label": "Build Number (leave blank for latest build).",
+      "defaultValue": "",
       "required": true,
       "helpMarkDown" : "Build number in JFrog Artifactory."
     },
