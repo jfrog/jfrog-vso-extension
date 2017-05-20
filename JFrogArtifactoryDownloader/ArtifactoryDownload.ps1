@@ -49,8 +49,7 @@ if($overrideCredentialsChecked)
 {
 	$artifactoryUser = $login
 	$artifactoryPwd =  $password
-}
-else
+}else
 {
 	$artifactoryUser = $($artifactoryEndpoint.Authorization.Parameters.UserName)
 
@@ -80,7 +79,7 @@ else
 {
 	if($BuildNumberInput -ne "")
 	{
-		 $body.buildNumber =  "$BuildNumberInput"
+		 $body.buildNumber =  $BuildNumberInput
 	}
 	else
     {
