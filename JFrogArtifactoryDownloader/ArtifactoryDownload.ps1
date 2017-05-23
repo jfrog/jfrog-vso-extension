@@ -79,13 +79,17 @@ if($buildStatus)
 
 if($BuildNumberInput -ne "")
 {
-	$body.buildNumber =  $BuildNumberInput
+    $body.buildNumber =  $BuildNumberInput
 }
-	else
+elseif( $env:BUILD_BUILDNUMBER -And $buildName -eq $env:BUILD_DEFINITIONNAME)
 {
-		$body.buildNumber = "LATEST"
+	$body.buildNumber =  "$env:BUILD_BUILDNUMBER"       
 }
-	Write-Host "buildNumber = $($body.buildNumber)"
+else
+{  
+	$body.buildNumber = "LATEST"
+}
+Write-Host "buildNumber = $($body.buildNumber)"
 
 $body.archiveType = "zip"
 
