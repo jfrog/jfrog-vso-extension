@@ -62,10 +62,10 @@
     {
       "name": "BuildNumberInput",
       "type": "string",
-      "label": "Build Number (leave blank for latest build).",
+      "label": "Build Number (optional).",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown" : "Build number in JFrog Artifactory."
+      "helpMarkDown" : "Build number in JFrog Artifactory. If not provided the task will use current build number from environment variables. If BUILD_BUILDNUMBER variable not available in context will use the latest from Artifactory"
     },
     {
       "name": "buildStatus",
