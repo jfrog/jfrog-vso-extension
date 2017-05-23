@@ -1,6 +1,7 @@
 param (
     [string]$artifactoryEndpointName,
     [string]$buildName,
+    [string]$BuildNumberInput,
     [string]$buildStatus,
     [string]$overrideCredentials,
     [string]$login,
@@ -49,8 +50,7 @@ if($overrideCredentialsChecked)
 {
 	$artifactoryUser = $login
 	$artifactoryPwd =  $password
-}
-else
+}else
 {
 	$artifactoryUser = $($artifactoryEndpoint.Authorization.Parameters.UserName)
 
@@ -76,18 +76,16 @@ if($buildStatus)
     $body.buildStatus = $buildStatus
     Write-Host "buildStatus = $buildStatus"
 } 
-else
+
+if($BuildNumberInput -ne "")
 {
-	if($env:BUILD_BUILDNUMBER)
-	{
-		 $body.buildNumber =  "$env:BUILD_BUILDNUMBER"
-	}
-	else
-    {
-		$body.buildNumber = "LATEST"
-	}
-	Write-Host "buildNumber = $($body.buildNumber)"
+	$body.buildNumber =  $BuildNumberInput
 }
+	else
+{
+		$body.buildNumber = "LATEST"
+}
+	Write-Host "buildNumber = $($body.buildNumber)"
 
 $body.archiveType = "zip"
 

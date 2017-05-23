@@ -14,7 +14,7 @@
   "version": {
     "Major": "1",
     "Minor": "1",
-    "Patch": "2"
+    "Patch": "8"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "JFrogArtifactoryDownloader $(message)",
@@ -58,6 +58,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown" : "Build name in JFrog Artifactory."
+    },
+    {
+      "name": "BuildNumberInput",
+      "type": "string",
+      "label": "Build Number (leave blank for latest build).",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown" : "Build number in JFrog Artifactory."
     },
     {
       "name": "buildStatus",
