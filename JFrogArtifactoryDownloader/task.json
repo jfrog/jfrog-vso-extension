@@ -59,6 +59,14 @@
       "required": true,
       "helpMarkDown" : "Build name in JFrog Artifactory."
     },
+   {
+      "name": "BuildNumberInput",
+      "type": "string",
+      "label": "Build Number (leave blank for current build number).",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown" : "Build number in JFrog Artifactory."
+    },
     {
       "name": "BuildNumberInput",
       "type": "string",
