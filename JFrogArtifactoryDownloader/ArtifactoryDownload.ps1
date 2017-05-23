@@ -76,20 +76,22 @@ if($buildStatus)
     $body.buildStatus = $buildStatus
     Write-Host "buildStatus = $buildStatus"
 } 
-
-if($BuildNumberInput -ne "")
-{
-    $body.buildNumber =  $BuildNumberInput
-}
-elseif( $env:BUILD_BUILDNUMBER -And $buildName -eq $env:BUILD_DEFINITIONNAME)
-{
-	$body.buildNumber =  "$env:BUILD_BUILDNUMBER"       
-}
 else
-{  
-	$body.buildNumber = "LATEST"
+{
+	if($BuildNumberInput -ne "")
+	{
+		$body.buildNumber =  $BuildNumberInput
+	}
+	elseif( $env:BUILD_BUILDNUMBER -And $buildName -eq $env:BUILD_DEFINITIONNAME)
+	{
+		$body.buildNumber =  "$env:BUILD_BUILDNUMBER"       
+	}
+	else
+	{  
+		$body.buildNumber = "LATEST"
+	}
+	Write-Host "buildNumber = $($body.buildNumber)"
 }
-Write-Host "buildNumber = $($body.buildNumber)"
 
 $body.archiveType = "zip"
 
