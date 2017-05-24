@@ -3,6 +3,7 @@ param (
     [string]$buildName,
     [string]$BuildNumberInput,
     [string]$buildStatus,
+	[string]$destinationFolder,
     [string]$overrideCredentials,
     [string]$login,
     [string]$password
@@ -102,6 +103,13 @@ $api = [string]::Format("{0}/api/archive/buildArtifacts", $artifactoryUrl)
 $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser, $artifactoryPwd)))
 
 $Destination = "$env:temp\artifacts.zip"
+if($destinationFolder -ne "")
+{
+	$destinationFolder = [System.Environment]::ExpandEnvironmentVariables($destinationFolder)
+	$Destination = "$destinationFolder\artifacts.zip" 
+}
+	Write-Verbose "Destination folder : $Destination"
+
 
 try{
 		Invoke-RestMethod -Uri $api -Method Post -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $jsonBody -OutFile $Destination
