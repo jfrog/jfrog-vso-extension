@@ -40,6 +40,10 @@
 			"uri": "https://www.jfrog.com/support"
 		}
 	},
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/JFrogDev/jfrog-vso-extension"
+    },
 	"branding": {
 		"color": "#43a047",
 		"theme": "light"
