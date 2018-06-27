@@ -98,6 +98,7 @@ $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0
 $Destination = "$env:temp\artifacts.zip"
 
 try{
+		[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 		Invoke-RestMethod -Uri $api -Method Post -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $jsonBody -OutFile $Destination
 		if(Test-Path $Destination)
 		{
