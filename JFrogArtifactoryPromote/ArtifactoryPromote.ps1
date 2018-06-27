@@ -118,9 +118,10 @@ Write-Host "build number = $($body.buildNumber)"
 $jsonBody = ConvertTo-JSON $body
 
 $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser, $artifactoryPwd)))
-
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $apiBuild = [string]::Format("{0}/api/build/promote/{1}/{2}", $artifactoryUrl, $buildName, $buildNumber)
 try{
+	
 	Write-Host "Send build information to JFrog Artifactory"
 	Invoke-RestMethod -Uri $apiBuild -Method POST -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -ContentType "application/json" -Body $jsonBody
 }
