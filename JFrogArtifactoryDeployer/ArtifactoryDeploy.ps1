@@ -75,6 +75,7 @@ Write-Verbose "contents = $contents (after expansion)"
 #get artifactory cli path and configure it
 if((!$artifactoryCliPath) -or ((Get-Item $artifactoryCliPath) -is [System.IO.DirectoryInfo]))
 {
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Write-Host "Downloading the JFrog cli from Bintray"
 	$source = "https://api.bintray.com/content/jfrog/jfrog-cli-go/1.4.1/jfrog-cli-windows-amd64/jfrog.exe;bt_package=jfrog-cli-windows-amd64"
 	$artifactoryCliPath = "$env:SYSTEM_ARTIFACTSDIRECTORY" + "\jfrog.exe"
@@ -131,6 +132,7 @@ else
 {
 	if($includeBuildInfoChecked)
 	{
+	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 		$buildInfo = GetBuildInformationFromLogsArtCli -logsArt $logsArt -pathToContent $pathToContent -artifactoryUser $artifactoryUser
 		
 		$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $artifactoryUser,$artifactoryPwd)))
