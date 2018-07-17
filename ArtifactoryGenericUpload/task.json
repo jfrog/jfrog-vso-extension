@@ -1,0 +1,76 @@
+{
+  "id": "07fc5c20-6772-11e5-abde-6901d3d00475",
+  "name": "ArtifactoryGenericUpload",
+  "friendlyName": "Artifactory Generic Upload",
+  "description": "This task deploys generic build artifacts to Artifactory",
+  "author": "jfrog",
+  "helpMarkDown": "Upload artifacts to JFrog Artifactory using FileSpecs.",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "Artifactory Generic Upload",
+  "inputs": [
+    {
+      "name": "artifactoryService",
+      "type": "connectedService:Generic",
+      "label": "Artifactory service",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Artifactory service for artifacts deployment."
+    },
+    {
+      "name": "overrideCredentials",
+      "type": "boolean",
+      "label": "Override Credentials",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "Override credentials given in service configuration."
+    },
+    {
+      "name": "login",
+      "type": "string",
+      "label": "User Login",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "overrideCredentials == true",
+      "helpMarkDown": "Name of a user with upload permissions on the target repository."
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "label": "User Encrypted Password",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "overrideCredentials == true",
+      "helpMarkDown": "The password of the user entered above."
+    },
+    {
+      "name": "filespec",
+      "type": "multiLine",
+      "label": "Spec",
+      "required": true,
+      "defaultValue": "",
+      "properties": {
+        "resizable": "true",
+        "rows": "10",
+        "maxLength": "10000"
+      },
+      "helpMarkDown": "To upload files, you need to create a File Spec."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "uploadArtifacts.js",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
