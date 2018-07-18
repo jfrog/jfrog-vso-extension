@@ -1,17 +1,20 @@
 var https = require('follow-redirects').https;
 var fs = require('fs');
+var tl = require('vsts-task-lib/task');
+
 const path = require('path');
 
 var fileName = getFileName();
-var version = "1.17.0";
-var filePath = path.join(version, fileName);
 var btPackage = "jfrog-cli-" + getArchitecture();
 var runTaskCbk = null;
+var folderPath = path.join(tl.getVariable("Agent.WorkFolder"), "_jfrog");
+var version = "1.17.0";
+var filePath = path.join(folderPath, version, fileName);
 
 module.exports = {
     downloadCli: function (runTaskFunc) {
         runTaskCbk = runTaskFunc;
-        if (!fs.existsSync(version) || !fs.existsSync(filePath)) {
+        if (!fs.existsSync(filePath)) {
             console.log("Downloading JFrog CLI " + version );
             https.get({
                 hostname: 'api.bintray.com',
@@ -35,9 +38,15 @@ function runCbk() {
 }
 
 function writeToFile(response) {
-    if (!fs.existsSync(version)) {
-        fs.mkdirSync(version);
+
+    if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
     }
+
+    if (!fs.existsSync(path.join(folderPath, version))) {
+        fs.mkdirSync(path.join(folderPath, version));
+    }
+
     var file = fs.createWriteStream(filePath);
     response.on('data', function (chunk) {
         file.write(chunk);

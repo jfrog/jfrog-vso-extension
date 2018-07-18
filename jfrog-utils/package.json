@@ -6,6 +6,7 @@
   "dependencies": {
     "debug": "^3.1.0",
     "follow-redirects": "^1.5.1",
+    "vsts-task-lib": "^2.6.0",
     "ms": "^2.1.1"
   },
   "devDependencies": {},
