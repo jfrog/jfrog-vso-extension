@@ -45,6 +45,62 @@
 		"theme": "light"
 	},
 	"contributions": [
+
+		{
+			"id": "artifactory-service",
+			"description": "Service Endpoint type for Artifactory connections",
+			"type": "ms.vss-endpoint.service-endpoint-type",
+			"targets": [ "ms.vss-endpoint.endpoint-types" ],
+			"properties": {
+				"name": "artifactoryService",
+				"displayName": "Artifactory Server",
+				"url": {
+					"displayName": "Server Url",
+					"helpText": "Specify the root URL of your Artifactory installation, like http://repo.jfrog.org/artifactory"
+				},
+				"dataSources":[
+					{
+						"name":"TestConnection",
+						"endpointUrl":"{{endpoint.url}}/api/plugins",
+						"resourceUrl":"",
+						"resultSelector": "jsonpath:$.values[*]",
+						"headers":[
+						],
+						"authenticationScheme":null
+					}
+				],
+					"authenticationSchemes": [
+							{
+								"type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+								"inputDescriptors": [
+									{
+										"id": "username",
+										"name": "Username",
+										"description": "User with permissions to deploy to the Artifactory server",
+										"inputMode": "textbox",
+										"validation": {
+											"isRequired": false,
+											"dataType": "string"
+										}
+							},
+							{
+								"id": "password",
+								"name": "Password",
+								"description": "Password for the user entered above",
+								"inputMode": "passwordbox",
+								"isConfidential": true,
+								"validation": {
+									"isRequired": false,
+									"dataType": "string"
+								}
+							}
+						]
+					}
+
+				]
+			}
+		},
+
 		{
 			"id": "JFrog.Artifactory",
 			"type": "ms.vss-web.hub",
@@ -154,6 +210,16 @@
 			"properties": {
 				"name": "ArtifactoryGenericUpload"
 			}
+		},
+		{
+			"id": "artifactory-maven",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "ArtifactoryMaven"
+			}
 		}
 	],
 	"files": [
@@ -195,6 +261,9 @@
 		},
 		{
 			"path": "JFrogArtifactoryPromote"
+		},
+		{
+			"path": "ArtifactoryMaven"
 		},
 		{
 			"path": "ArtifactoryGenericUpload"
