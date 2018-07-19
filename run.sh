@@ -1,24 +1,26 @@
 #!/bin/bash
-echo OK starting working
+echo Build started ...
+
 cd jfrog-utils
 echo In path: $(pwd)
+rm -rf package-lock.json
+rm -rf node_modules
+rm -rf *.tgz
 npm pack
 cd ..
+
 echo In path: $(pwd)
-declare -a arr=("ArtifactoryGenericUpload")
+declare -a arr=("ArtifactoryGenericUpload" "ArtifactoryGenericDownload" "ArtifactoryPublishBuildInfo")
 
 for i in "${arr[@]}"
 do
-   #echo "Copying jfrog-utils to: $i"
-   cd $i
-   echo In path: $(i)
-   echo Running npm install
-   npm install
-   #rsync -r --exclude='package-lock.json' ../jfrog-utils/ node_modules/jfrog-utils/
-   cd ..
+    rm -rf package-lock.json
+    rm -rf node_modules
+    cd $i
+    npm install
+    cd ..
 done
 
 rm -rf jfrog-utils/node_modules
 
 tfx extension create --manifest-globs vss-extension.json
-#source pack_publish_extension.sh

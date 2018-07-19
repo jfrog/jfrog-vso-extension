@@ -4,7 +4,8 @@ const execSync = require('child_process').execSync;
 const utils = require('jfrog-utils');
 const path = require('path');
 
-var cliDownloadCommand = "rt u";
+var cliBuildPublishCommand = "rt bp";
+var cliCollectEnvVarsCommand = "rt bce"
 
 function RunTaskCbk(cliPath) {
     process.env["JFROG_CLI_OFFER_CONFIG"] = false;
@@ -12,24 +13,22 @@ function RunTaskCbk(cliPath) {
     var buildDir = tl.getVariable('Agent.BuildDirectory');
     var buildDefinition = tl.getVariable('BUILD.DEFINITIONNAME');
     var buildNumber = tl.getVariable('BUILD_BUILDNUMBER');
-    var specPath = path.join(buildDir, "uploadSpec.json");
 
     // Get configured parameters
     var artifactory = tl.getInput("artifactoryService", true);
     var artifactoryUrl = tl.getEndpointUrl(artifactory);
     var artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);
     var artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactory, "password", true);
-    var filespec = tl.getInput("filespec", true);
-    var collectBuildInfo = tl.getBoolInput("collectBuildInfo");
+    var collectBuildInfo = tl.getBoolInput("includeEnvVars");
 
-    // Write provided filespec to file
-    try {
-        tl.writeFile(specPath, filespec);
-    } catch (ex) {
-        handleException(ex);
+    // Collect env vars
+    if (collectBuildInfo) {
+        console.log("Collecting environment variables...");
+        var cliEnvVarsCommand = utils.cliJoin(cliPath, cliCollectEnvVarsCommand, buildDefinition, buildNumber);
+        executeCliCommand(cliEnvVarsCommand, buildDir);
     }
 
-    var cliCommand = utils.cliJoin(cliPath, cliDownloadCommand, "--url=" + artifactoryUrl, "--spec=" + specPath);
+    var cliCommand = utils.cliJoin(cliPath, cliBuildPublishCommand, buildDefinition, buildNumber, "--url=" + artifactoryUrl);
 
     // Check if should make anonymous access to artifactory
     if (artifactoryUser == "") {
@@ -37,11 +36,6 @@ function RunTaskCbk(cliPath) {
         cliCommand = utils.cliJoin(cliCommand, "--user=" + artifactoryUser);
     } else {
         cliCommand = utils.cliJoin(cliCommand, "--user=" + artifactoryUser, "--password=" + artifactoryPassword);
-    }
-
-    // Add build info collection
-    if (collectBuildInfo) {
-        cliCommand = utils.cliJoin(cliCommand, "--build-name=" + buildDefinition, "--build-number=" + buildNumber);
     }
 
     executeCliCommand(cliCommand, buildDir);

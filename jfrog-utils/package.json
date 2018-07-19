@@ -2,7 +2,7 @@
   "name": "jfrog-utils",
   "version": "1.0.0",
   "description": "Jfrog utils",
-  "main": "index.js",
+  "main": "jutils.js",
   "dependencies": {
     "debug": "^3.1.0",
     "follow-redirects": "^1.5.1",

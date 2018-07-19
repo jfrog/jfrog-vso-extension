@@ -103,8 +103,7 @@
   "execution": {
     "PowerShell": {
       "target": "$(currentDirectory)\\ArtifactoryDeploy.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
+      "argumentFormat": ""
     }
   }
 }

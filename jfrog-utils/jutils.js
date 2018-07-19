@@ -12,7 +12,7 @@ var version = "1.17.0";
 var filePath = path.join(folderPath, version, fileName);
 
 module.exports = {
-    downloadCli: function (runTaskFunc) {
+    executeCliTask: function (runTaskFunc) {
         runTaskCbk = runTaskFunc;
         if (!fs.existsSync(filePath)) {
             console.log("Downloading JFrog CLI " + version );
@@ -28,6 +28,27 @@ module.exports = {
             console.log("JFrog CLI  " + version + " exists locally.");
             runCbk();
         }
+    },
+
+    cliJoin: function () {
+        if (arguments.length === 0)
+            return "";
+
+        var command;
+        var firstArg;
+        for (var i = 0; i < arguments.length; ++i) {
+            var arg = arguments[i];
+            if (arg.length > 0) {
+                if (command === undefined)
+                    command = firstArg = arg;
+                else
+                    command += " " + arg;
+            }
+        }
+
+        if (command === undefined)
+            return "";
+        return command;
     }
 };
 

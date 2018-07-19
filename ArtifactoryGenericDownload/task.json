@@ -1,10 +1,10 @@
 {
-  "id": "07fc5c20-6772-11e5-abde-6901d3d00475",
-  "name": "ArtifactoryGenericUpload",
-  "friendlyName": "Artifactory Generic Upload",
-  "description": "This task uploads generic build artifacts to Artifactory",
+  "id": "07fc5c20-6772-11e5-abde-6901d3c00755",
+  "name": "ArtifactoryGenericDownload",
+  "friendlyName": "Artifactory Generic Download",
+  "description": "This task downloads files from Artifactory",
   "author": "jfrog",
-  "helpMarkDown": "Upload artifacts to JFrog Artifactory using FileSpecs.",
+  "helpMarkDown": "Download artifacts from JFrog Artifactory using FileSpecs.",
   "category": "Utility",
   "visibility": [
     "Build",
@@ -17,7 +17,7 @@
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "Artifactory Generic Upload",
+  "instanceNameFormat": "Artifactory Generic Download",
   "inputs": [
     {
       "name": "artifactoryService",
@@ -25,7 +25,7 @@
       "label": "Artifactory service",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Artifactory service for artifacts upload."
+      "helpMarkDown": "Artifactory service for artifacts download."
     },
     {
       "name": "filespec",
@@ -38,7 +38,7 @@
         "rows": "10",
         "maxLength": "10000"
       },
-      "helpMarkDown": "To upload files, you need to create a File Spec."
+      "helpMarkDown": "To download files, you need to create a File Spec."
     },
     {
       "name": "collectBuildInfo",
@@ -51,8 +51,7 @@
   ],
   "execution": {
     "Node": {
-      "target": "uploadArtifacts.js",
-      "workingDirectory": "$(currentDirectory)"
+      "target": "downloadArtifacts.js"
     }
   }
 }

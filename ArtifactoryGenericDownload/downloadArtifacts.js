@@ -4,7 +4,7 @@ const execSync = require('child_process').execSync;
 const utils = require('jfrog-utils');
 const path = require('path');
 
-var cliDownloadCommand = "rt u";
+var cliDownloadCommand = "rt dl";
 
 function RunTaskCbk(cliPath) {
     process.env["JFROG_CLI_OFFER_CONFIG"] = false;
@@ -12,9 +12,9 @@ function RunTaskCbk(cliPath) {
     var buildDir = tl.getVariable('Agent.BuildDirectory');
     var buildDefinition = tl.getVariable('BUILD.DEFINITIONNAME');
     var buildNumber = tl.getVariable('BUILD_BUILDNUMBER');
-    var specPath = path.join(buildDir, "uploadSpec.json");
+    var specPath = path.join(buildDir, "downloadSpec.json");
 
-    // Get configured parameters
+    // Get input parameters
     var artifactory = tl.getInput("artifactoryService", true);
     var artifactoryUrl = tl.getEndpointUrl(artifactory);
     var artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);

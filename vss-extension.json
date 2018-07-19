@@ -212,13 +212,23 @@
 			}
 		},
 		{
-			"id": "artifactory-maven",
+			"id": "artifactory-generic-download",
 			"type": "ms.vss-distributed-task.task",
 			"targets": [
 				"ms.vss-distributed-task.tasks"
 			],
 			"properties": {
-				"name": "ArtifactoryMaven"
+				"name": "ArtifactoryGenericDownload"
+			}
+		},
+		{
+			"id": "artifactory-publish-build-info",
+			"type": "ms.vss-distributed-task.task",
+			"targets": [
+				"ms.vss-distributed-task.tasks"
+			],
+			"properties": {
+				"name": "ArtifactoryPublishBuildInfo"
 			}
 		}
 	],
@@ -263,10 +273,13 @@
 			"path": "JFrogArtifactoryPromote"
 		},
 		{
-			"path": "ArtifactoryMaven"
+			"path": "ArtifactoryGenericUpload"
 		},
 		{
-			"path": "ArtifactoryGenericUpload"
+			"path": "ArtifactoryGenericDownload"
+		},
+		{
+			"path": "ArtifactoryPublishBuildInfo"
 		}
 	]
 }
