@@ -13,6 +13,9 @@ var filePath = path.join(folderPath, version, fileName);
 
 module.exports = {
     executeCliTask: function (runTaskFunc) {
+        process.env.JFROG_CLI_HOME = path.join(folderPath, version);
+        process.env.JFROG_CLI_OFFER_CONFIG = false;
+
         runTaskCbk = runTaskFunc;
         if (!fs.existsSync(filePath)) {
             console.log("Downloading JFrog CLI " + version );

@@ -4,23 +4,21 @@ const execSync = require('child_process').execSync;
 const utils = require('jfrog-utils');
 const path = require('path');
 
-var cliDownloadCommand = "rt dl";
+const cliDownloadCommand = "rt dl";
 
 function RunTaskCbk(cliPath) {
-    process.env["JFROG_CLI_OFFER_CONFIG"] = false;
-
-    var buildDir = tl.getVariable('Agent.BuildDirectory');
-    var buildDefinition = tl.getVariable('BUILD.DEFINITIONNAME');
-    var buildNumber = tl.getVariable('BUILD_BUILDNUMBER');
-    var specPath = path.join(buildDir, "downloadSpec.json");
+    let buildDir = tl.getVariable('Agent.BuildDirectory');
+    let buildDefinition = tl.getVariable('BUILD.DEFINITIONNAME');
+    let buildNumber = tl.getVariable('BUILD_BUILDNUMBER');
+    let specPath = path.join(buildDir, "downloadSpec.json");
 
     // Get input parameters
-    var artifactory = tl.getInput("artifactoryService", true);
-    var artifactoryUrl = tl.getEndpointUrl(artifactory);
-    var artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);
-    var artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactory, "password", true);
-    var filespec = tl.getInput("filespec", true);
-    var collectBuildInfo = tl.getBoolInput("collectBuildInfo");
+    let artifactory = tl.getInput("artifactoryService", true);
+    let artifactoryUrl = tl.getEndpointUrl(artifactory);
+    let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);
+    let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactory, "password", true);
+    let filespec = tl.getInput("filespec", true);
+    let collectBuildInfo = tl.getBoolInput("collectBuildInfo");
 
     // Write provided filespec to file
     try {
@@ -29,7 +27,7 @@ function RunTaskCbk(cliPath) {
         handleException(ex);
     }
 
-    var cliCommand = utils.cliJoin(cliPath, cliDownloadCommand, "--url=" + artifactoryUrl, "--spec=" + specPath);
+    let cliCommand = utils.cliJoin(cliPath, cliDownloadCommand, "--url=" + artifactoryUrl, "--spec=" + specPath);
 
     // Check if should make anonymous access to artifactory
     if (artifactoryUser == "") {

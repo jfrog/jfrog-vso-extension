@@ -2,36 +2,33 @@
 const tl = require('vsts-task-lib/task');
 const execSync = require('child_process').execSync;
 const utils = require('jfrog-utils');
-const path = require('path');
 
-var cliBuildPublishCommand = "rt bp";
-var cliCollectEnvVarsCommand = "rt bce"
+const cliBuildPublishCommand = "rt bp";
+const cliCollectEnvVarsCommand = "rt bce";
 
 function RunTaskCbk(cliPath) {
-    process.env["JFROG_CLI_OFFER_CONFIG"] = false;
-
-    var buildDir = tl.getVariable('Agent.BuildDirectory');
-    var buildDefinition = tl.getVariable('BUILD.DEFINITIONNAME');
-    var buildNumber = tl.getVariable('BUILD_BUILDNUMBER');
+    let buildDir = tl.getVariable('Agent.BuildDirectory');
+    let buildDefinition = tl.getVariable('BUILD.DEFINITIONNAME');
+    let buildNumber = tl.getVariable('BUILD_BUILDNUMBER');
 
     // Get configured parameters
-    var artifactory = tl.getInput("artifactoryService", true);
-    var artifactoryUrl = tl.getEndpointUrl(artifactory);
-    var artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);
-    var artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactory, "password", true);
-    var collectBuildInfo = tl.getBoolInput("includeEnvVars");
+    let artifactory = tl.getInput("artifactoryService", true);
+    let artifactoryUrl = tl.getEndpointUrl(artifactory);
+    let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);
+    let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactory, "password", true);
+    let collectBuildInfo = tl.getBoolInput("includeEnvVars");
 
     // Collect env vars
     if (collectBuildInfo) {
         console.log("Collecting environment variables...");
-        var cliEnvVarsCommand = utils.cliJoin(cliPath, cliCollectEnvVarsCommand, buildDefinition, buildNumber);
+        let cliEnvVarsCommand = utils.cliJoin(cliPath, cliCollectEnvVarsCommand, buildDefinition, buildNumber);
         executeCliCommand(cliEnvVarsCommand, buildDir);
     }
 
-    var cliCommand = utils.cliJoin(cliPath, cliBuildPublishCommand, buildDefinition, buildNumber, "--url=" + artifactoryUrl);
+    let cliCommand = utils.cliJoin(cliPath, cliBuildPublishCommand, buildDefinition, buildNumber, "--url=" + artifactoryUrl);
 
     // Check if should make anonymous access to artifactory
-    if (artifactoryUser == "") {
+    if (artifactoryUser === "") {
         artifactoryUser = "anonymous";
         cliCommand = utils.cliJoin(cliCommand, "--user=" + artifactoryUser);
     } else {
