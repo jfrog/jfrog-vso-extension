@@ -102,20 +102,6 @@
 		},
 
 		{
-			"id": "JFrog.Artifactory",
-			"type": "ms.vss-web.hub",
-			"description": "Add a new hub to build group to setup your JFrog Artifactory endpoint.",
-			"targets": [
-				"ms.vss-build-web.build-hub-group",
-			    "ms.vss-build-web.build-release-hub-group"
-			],
-			"properties": {
-				"name": "Setup JFrog Artifactory",
-				"order": 99,
-				"uri": "setup-artifactory.html"
-			}
-		},
-		 {
             "id": "artifactory-build-info-tab",
             "type": "ms.vss-build-web.build-results-tab",
             "description": "A tab in build result to enforce Artifactory integration",
@@ -234,16 +220,7 @@
 	],
 	"files": [
 		{
-			"path": "setup-artifactory.html", "addressable": true
-		},
-		{
 			"path": "artifactory-build-info.html", "addressable": true
-		},
-		{
-			"path": "promote-build-action.html", "addressable": true
-		},
-		{
-			"path": "promote-build-dialog.html", "addressable": true
 		},
 		{
 			"path": "setup-build-action.html", "addressable": true

@@ -13,7 +13,7 @@ function RunTaskCbk(cliPath) {
 
     // Get configured parameters
     let artifactory = tl.getInput("artifactoryService", true);
-    let artifactoryUrl = tl.getEndpointUrl(artifactory);
+    let artifactoryUrl = tl.getEndpointUrl(artifactory, false);
     let artifactoryUser = tl.getEndpointAuthorizationParameter(artifactory, "username", true);
     let artifactoryPassword = tl.getEndpointAuthorizationParameter(artifactory, "password", true);
     let collectBuildInfo = tl.getBoolInput("includeEnvVars");
@@ -36,6 +36,7 @@ function RunTaskCbk(cliPath) {
     }
 
     executeCliCommand(cliCommand, buildDir);
+    attachBuildInfoUrl(buildDefinition, buildNumber);
 
     tl.setResult(tl.TaskResult.Succeeded, "Build Succeeded.");
 }
@@ -53,6 +54,17 @@ function handleException (ex) {
     console.log(ex);
     tl.setResult(tl.TaskResult.Failed);
     process.exit(1);
+}
+
+function attachBuildInfoUrl(buildName, buildNumber) {
+    let buildDir = tl.getVariable('Agent.BuildDirectory');
+    let artifactory = tl.getInput("artifactoryService", true);
+    let artifactoryUrl = tl.getEndpointUrl(artifactory, false);
+    let artifactoryUrlFile = path.join(buildDir, "artifactoryUrlFile");
+    tl.writeFile(artifactoryUrlFile, artifactoryUrl + '/webapp/builds/' + buildName + '/' + buildNumber);
+
+    //Executes command to attach the file to build
+    console.log("##vso[task.addattachment type=artifactoryData;name=artifactoryUrl;]" + artifactoryUrlFile);
 }
 
 utils.executeCliTask(RunTaskCbk);
