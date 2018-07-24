@@ -171,16 +171,6 @@
             }
         },
         {
-            "id": "jfrog-artifactory-promote-build-task",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "JFrogArtifactoryPromote"
-            }
-        },
-        {
             "id": "artifactory-generic-upload",
             "type": "ms.vss-distributed-task.task",
             "targets": [
@@ -245,9 +235,6 @@
         },
         {
             "path": "JFrogArtifactoryDownloader"
-        },
-        {
-            "path": "JFrogArtifactoryPromote"
         },
         {
             "path": "ArtifactoryGenericUpload"
