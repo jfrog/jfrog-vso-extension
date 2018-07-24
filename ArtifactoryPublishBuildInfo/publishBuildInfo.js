@@ -2,6 +2,7 @@
 const tl = require('vsts-task-lib/task');
 const execSync = require('child_process').execSync;
 const utils = require('jfrog-utils');
+const path = require('path');
 
 const cliBuildPublishCommand = "rt bp";
 const cliCollectEnvVarsCommand = "rt bce";
