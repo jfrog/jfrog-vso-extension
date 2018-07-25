@@ -1,15 +1,19 @@
-var https = require('follow-redirects').https;
-var fs = require('fs');
-var tl = require('vsts-task-lib/task');
-
+const fs = require('fs');
+const tl = require('vsts-task-lib/task');
+const checksumStream = require('checksum-stream');
 const path = require('path');
+const requestPromise = require('request-promise');
 
-var fileName = getFileName();
-var btPackage = "jfrog-cli-" + getArchitecture();
-var runTaskCbk = null;
-var folderPath = path.join(tl.getVariable("Agent.WorkFolder"), "_jfrog");
-var version = "1.17.0";
-var filePath = path.join(folderPath, version, fileName);
+const fileName = getFileName();
+const btPackage = "jfrog-cli-" + getArchitecture();
+const folderPath = path.join(tl.getVariable("Agent.WorkFolder"), "_jfrog");
+const version = "1.17.0";
+const cliPath = path.join(folderPath, version, fileName);
+const cliTmpPath = cliPath + ".tmp";
+const cliUrl = 'https://api.bintray.com/content/jfrog/jfrog-cli-go/' + version + '/' + btPackage + '/' + fileName + "?bt_package=" + btPackage;
+const MAX_RETRIES = 10;
+
+let runTaskCbk = null;
 
 module.exports = {
     executeCliTask: function (runTaskFunc) {
@@ -17,16 +21,9 @@ module.exports = {
         process.env.JFROG_CLI_OFFER_CONFIG = false;
 
         runTaskCbk = runTaskFunc;
-        if (!fs.existsSync(filePath)) {
-            console.log("Downloading JFrog CLI " + version );
-            https.get({
-                hostname: 'api.bintray.com',
-                port: 443,
-                path: '/content/jfrog/jfrog-cli-go/' + version + '/' + btPackage + '/' + fileName + '?bt_package=' + btPackage,
-                agent: false,
-                followAllRedirects: true
-            }, writeToFile).on('error', function (err) {console.error(err);});
-
+        if (!fs.existsSync(cliPath)) {
+            createCliDirs();
+            downloadCli().then(runCbk)
         } else {
             console.log("JFrog CLI  " + version + " exists locally.");
             runCbk();
@@ -34,35 +31,34 @@ module.exports = {
     },
 
     cliJoin: function () {
-        if (arguments.length === 0)
+        if (arguments.length === 0) {
             return "";
-
-        var command;
-        var firstArg;
-        for (var i = 0; i < arguments.length; ++i) {
-            var arg = arguments[i];
-            if (arg.length > 0) {
-                if (command === undefined)
-                    command = firstArg = arg;
-                else
-                    command += " " + arg;
-            }
         }
 
-        if (command === undefined)
-            return "";
+        let command = "";
+        let firstArg;
+        for (let i = 0; i < arguments.length; ++i) {
+            let arg = arguments[i];
+            if (arg.length > 0) {
+                if (command === "") {
+                    command = firstArg = arg;
+                }
+                else {
+                    command += " " + arg;
+                }
+            }
+        }
         return command;
     }
 };
 
 function runCbk() {
     if (runTaskCbk != null) {
-        runTaskCbk(filePath);
+        runTaskCbk(cliPath);
     }
 }
 
-function writeToFile(response) {
-
+function createCliDirs() {
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath);
     }
@@ -70,24 +66,49 @@ function writeToFile(response) {
     if (!fs.existsSync(path.join(folderPath, version))) {
         fs.mkdirSync(path.join(folderPath, version));
     }
+}
 
-    var file = fs.createWriteStream(filePath);
-    response.on('data', function (chunk) {
-        file.write(chunk);
-    }).on('end', function () {
-        file.end();
-        if (!process.platform.startsWith("win")) {
-            fs.chmodSync(filePath, 0555)
+function downloadCli(attemptNumber) {
+    return new Promise((resolve, reject) => {
+        function handleError(err) {
+            if (attemptNumber <= MAX_RETRIES) {
+                console.log("Attempt #" + attemptNumber + " to download jfrog-cli failed, trying again.");
+                downloadCli(++attemptNumber);
+            } else {
+                reject(err);
+            }
         }
-        console.log("Finished downloading jfrog cli");
-        runCbk();
-    }).on('error', function (err) {
-        console.error(err);
+
+        let req = requestPromise.get(cliUrl);
+        req.on('response', (res) => {
+            res.pipe(
+                checksumStream({
+                    algorithm: 'sha256',
+                    digest: res.headers['X-Checksum-Sha256'],
+                    size: res.headers['content-length']
+                }).on('error', handleError)
+                    .on('end', () => {
+                        if (res.statusCode >= 200 && res.statusCode < 300) {
+                            fs.rename(cliTmpPath, cliPath, () => {
+                                if (!process.platform.startsWith("win")) {
+                                    fs.chmodSync(cliPath, 0o555)
+                                }
+                                console.log("Finished downloading jfrog cli");
+                                resolve();
+                            });
+                        }
+                    })
+            ).pipe(
+                fs.createWriteStream(cliTmpPath)
+            )
+        }).catch(handleError)
+    }).catch((err) => {
+        tl.setResult(tl.TaskResult.Failed, err.message);
     });
 }
 
 function getArchitecture() {
-    var platform = process.platform;
+    let platform = process.platform;
     if (platform.startsWith("win")) {
         return "windows-amd64"
     }
@@ -101,9 +122,9 @@ function getArchitecture() {
 }
 
 function getFileName() {
-    var excecutable = "jfrog";
+    let executable = "jfrog";
     if (process.platform.startsWith("win")) {
-        excecutable += ".exe"
+        executable += ".exe"
     }
-    return excecutable
+    return executable
 }
