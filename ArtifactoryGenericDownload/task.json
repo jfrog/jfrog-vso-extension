@@ -38,7 +38,7 @@
         "rows": "10",
         "maxLength": "10000"
       },
-      "helpMarkDown": "To download files, you need to create a File Spec."
+      "helpMarkDown": "To specify the artifacts you wish to download from Artifactory, please create a File Spec."
     },
     {
       "name": "collectBuildInfo",
@@ -46,7 +46,7 @@
       "label": "Collect Build Info",
       "defaultValue": "false",
       "required": false,
-      "helpMarkDown": "Check if you wish this task results to be included in the collected build information."
+      "helpMarkDown": "Check if you wish this task to collect build-info."
     }
   ],
   "execution": {

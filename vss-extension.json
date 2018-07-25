@@ -57,10 +57,10 @@
             ],
             "properties": {
                 "name": "artifactoryService",
-                "displayName": "Artifactory Server",
+                "displayName": "Artifactory",
                 "url": {
-                    "displayName": "Server Url",
-                    "helpText": "Specify the root URL of your Artifactory installation, like http://repo.jfrog.org/artifactory"
+                    "displayName": "Server URL",
+                    "helpText": "Specify the root URL of your Artifactory installation. For example http://repo.jfrog.org/artifactory"
                 },
                 "dataSources": [
                     {
@@ -80,7 +80,7 @@
                             {
                                 "id": "username",
                                 "name": "Username",
-                                "description": "User with permissions to deploy to the Artifactory server",
+                                "description": "Username of an Artifactory user with deploy permissions",
                                 "inputMode": "textbox",
                                 "validation": {
                                     "isRequired": false,
@@ -90,7 +90,7 @@
                             {
                                 "id": "password",
                                 "name": "Password",
-                                "description": "Password for the user entered above",
+                                "description": "Password or API key of an Artifactory user with deploy permissions",
                                 "inputMode": "passwordbox",
                                 "isConfidential": true,
                                 "validation": {
