@@ -7,7 +7,7 @@ const requestPromise = require('request-promise');
 const fileName = getFileName();
 const btPackage = "jfrog-cli-" + getArchitecture();
 const folderPath = path.join(tl.getVariable("Agent.WorkFolder"), "_jfrog");
-const version = "1.17.0";
+const version = "1.17.1";
 const cliPath = path.join(folderPath, version, fileName);
 const cliTmpPath = cliPath + ".tmp";
 const cliUrl = 'https://api.bintray.com/content/jfrog/jfrog-cli-go/' + version + '/' + btPackage + '/' + fileName + "?bt_package=" + btPackage;
