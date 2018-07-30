@@ -2,8 +2,8 @@
 	"manifestversion": 1,
 	"public": true,
 	"id": "jfrog-artifactory",
-	"version": "1.2.2",
-	"name": "JFrog Artifactory Integration",
+	"version": "1.2.3",
+	"name": "[deprecated] JFrog Artifactory Integration",
 	"description": "Integrate your JFrog Artifactory with Visual Studio Team Service.",
 	"publisher": "JFrog",
 	"targets": [
