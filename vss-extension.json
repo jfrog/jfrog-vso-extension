@@ -27,7 +27,10 @@
 	"content":	{
 		"details": {
 			"path": "overview.md"
-		}		
+		},
+		"license": {
+			"path": "license.txt"
+		}	
 	},
 	"links": {
 		"getstarted": {
@@ -40,6 +43,10 @@
 			"uri": "https://www.jfrog.com/support"
 		}
 	},
+	"repository": {
+		"type": "git",
+		"uri": "https://github.com/JFrogDev/jfrog-vso-extension"
+	},
 	"branding": {
 		"color": "#43a047",
 		"theme": "light"
@@ -51,7 +58,7 @@
 			"description": "Add a new hub to build group to setup your JFrog Artifactory endpoint.",
 			"targets": [
 				"ms.vss-build-web.build-hub-group",
-			    "ms.vss-build-web.build-release-hub-group"
+				"ms.vss-build-web.build-release-hub-group"
 			],
 			"properties": {
 				"name": "Setup JFrog Artifactory",
@@ -59,32 +66,32 @@
 				"uri": "setup-artifactory.html"
 			}
 		},
-		 {
-            "id": "artifactory-build-info-tab",
-            "type": "ms.vss-build-web.build-results-tab",
-            "description": "A tab in build result to enforce Artifactory integration",
-            "targets": [
-                "ms.vss-build-web.build-results-view"
-            ],
-            "properties": {
-                "name": "JFrog Artifactory",
-                 "uri": "artifactory-build-info.html"
-            }
-        },
 		{
-         "id": "promote-build-action",
-         "type": "ms.vss-web.action",
-         "description": "Promote a terminated build to JFrog Artifactory",
-         "targets": [
-             "ms.vss-build-web.completed-build-menu"
-         ],
-         "properties": {
-             "text": "Promote to JFrog Artifactory",
-             "title": "Promote to JFrog Artifactory",
-             "uri": "promote-build-action.html"
-         	}
-     	},
-		 {
+			"id": "artifactory-build-info-tab",
+			"type": "ms.vss-build-web.build-results-tab",
+			"description": "A tab in build result to enforce Artifactory integration",
+			"targets": [
+				"ms.vss-build-web.build-results-view"
+			],
+			"properties": {
+				"name": "JFrog Artifactory",
+				"uri": "artifactory-build-info.html"
+			}
+		},
+		{
+		"id": "promote-build-action",
+		"type": "ms.vss-web.action",
+		"description": "Promote a terminated build to JFrog Artifactory",
+		"targets": [
+			"ms.vss-build-web.completed-build-menu"
+		],
+		"properties": {
+			"text": "Promote to JFrog Artifactory",
+			"title": "Promote to JFrog Artifactory",
+			"uri": "promote-build-action.html"
+			}
+		},
+		{
 			"id": "promoteBuildDialog",
 			"type": "ms.vss-web.control",
 			"description": "The content to be displayed on promote to Jfrog Artifactory action dialog",
@@ -93,19 +100,19 @@
 				"uri": "promote-build-dialog.html?id={{buildId}}"
 			}
 		},
-		 {
-         "id": "setup-build-action",
-         "type": "ms.vss-web.action",
-         "description": "Setup a build definition with JFrog Artifactory",
-         "targets": [
-             "ms.vss-build-web.build-definition-menu"
-         ],
-         "properties": {
-             "text": "Setup JFrog Artifactory",
-             "title": "Setup JFrog Artifactory",
-             "uri": "setup-build-action.html"
-         	}
-     	},
+		{
+		"id": "setup-build-action",
+		"type": "ms.vss-web.action",
+		"description": "Setup a build definition with JFrog Artifactory",
+		"targets": [
+			"ms.vss-build-web.build-definition-menu"
+		],
+		"properties": {
+			"text": "Setup JFrog Artifactory",
+			"title": "Setup JFrog Artifactory",
+			"uri": "setup-build-action.html"
+			}
+		},
 		{
 			"id": "setupBuildDialog",
 			"type": "ms.vss-web.control",
