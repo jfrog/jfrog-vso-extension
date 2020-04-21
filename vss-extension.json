@@ -27,7 +27,10 @@
 	"content":	{
 		"details": {
 			"path": "overview.md"
-		}		
+		},
+		"license": {
+			"path": "LICENSE.md"
+		}
 	},
 	"links": {
 		"getstarted": {
@@ -38,6 +41,9 @@
 		},
 		"support": {
 			"uri": "https://www.jfrog.com/support"
+		},
+		"privacypolicy": {
+			"uri": "https://www.jfrog.com/privacy-policy"
 		}
 	},
 	"branding": {
